@@ -2,6 +2,8 @@ const {
   app,
   BrowserWindow,
   ipcMain,
+  Menu,
+  MenuItem,
 } = require('electron')
 
 const path = require('path')
@@ -24,7 +26,25 @@ const criarJanelaPrincipal = () => {
 
   console.log('A janela da aplicação foi criada!')
 
-  abrirJanelaDeProntuariosEAnamnese(janelaPrincipal)
+  prepararJanelaDeProntuarios(janelaPrincipal)
+  prepararJanelaDeSessoes(janelaPrincipal)
+
+  // Setando menu na tela inicial
+  const menu = new Menu()
+  menu.append(new MenuItem({
+      label: 'Adminstração',
+      submenu: [
+          {
+              label: 'Roteiro de anamnese',
+              acelerator: process.platform === 'darwin' ? 'Alt+Cmd+I' : 'Alt+Shift+A',
+              click: () => {
+                prepararJanelaDeRoteiroDeAnamnese(janelaPrincipal)
+              }
+          }
+      ]
+  }))
+
+  janelaPrincipal.setMenu(menu);
 }
 
 /**
@@ -33,8 +53,8 @@ const criarJanelaPrincipal = () => {
  * @param {string} janelaPai
  * @return {undefined}
  **/
-function abrirJanelaDeProntuariosEAnamnese(janelaPai) {
-    ipcMain.on('abrir_janela_prontuarios_e_anamnese', (event, customerData) => {
+function prepararJanelaDeProntuarios(janelaPai) {
+  ipcMain.on('abrir_janela_prontuarios_e_anamnese', (evento, dados) => {
     console.log('Abrindo janela de Prontuários e anamnese!')
 
     const opcoes = {
@@ -62,8 +82,87 @@ function abrirJanelaDeProntuariosEAnamnese(janelaPai) {
     //     janelaPai.webContents.send('customerWasChosen', customerData)
     // })
     janelaProntuarios.show()
+    janelaProntuarios.setMenu(new Menu());
   })
 }
+
+/**
+ * "Instala" o event listener que fica ouvindo o evento "abrir_janela_sessoes"
+ * e a partir dele abre a janela de Sessoes
+ * @param {string} janelaPai
+ * @return {undefined}
+ **/
+function prepararJanelaDeSessoes(janelaPai) {
+    ipcMain.on('abrir_janela_sessoes', (evento, dados) => {
+    console.log('Abrindo janela de sessões!')
+
+    const opcoes = {
+        parent: janelaPai,
+        modal: true,
+        center: true,
+        title: 'Sessões',
+        width: 1028,
+        height: 528,
+        webPreferences: {
+            nodeIntegration: true
+        },
+        resizable: false,
+    }
+
+    let janelaDeSessoes = new BrowserWindow(opcoes)
+
+    /** @windows @mac only */
+    janelaDeSessoes.movable = false
+
+    janelaDeSessoes.loadFile('sessoes.html')
+    
+    // janelaPai.webContents.on('did-finish-load', () => {
+    //     janelaPai.webContents.openDevTools()
+    //     janelaPai.webContents.send('customerWasChosen', customerData)
+    // })
+    janelaDeSessoes.show()
+    janelaDeSessoes.setMenu(new Menu());
+  })
+}
+
+/**
+ * Abre a janela de RoteiroDeAnamnese
+ * @param {string} janelaPai
+ * @return {undefined}
+ **/
+function prepararJanelaDeRoteiroDeAnamnese(janelaPai) {
+
+    console.log('Abrindo janela de Roteiro de anamnese!')
+
+    const opcoes = {
+        parent: janelaPai,
+        modal: true,
+        center: true,
+        title: 'Roteiro de anamnese',
+        width: 1028,
+        height: 528,
+        webPreferences: {
+            nodeIntegration: true
+        },
+        resizable: false,
+    }
+
+    let janelaDeRoteiro = new BrowserWindow(opcoes)
+
+    /** @windows @mac only */
+    janelaDeRoteiro.movable = false
+
+    janelaDeRoteiro.loadFile('roteiro-de-anamnese.html')
+
+    // janelaPai.webContents.on('did-finish-load', () => {
+    //     janelaPai.webContents.openDevTools()
+    //     janelaPai.webContents.send('customerWasChosen', customerData)
+    // })
+    janelaDeRoteiro.show()
+    janelaDeRoteiro.setMenu(new Menu());
+}
+
+
 
 app.whenReady().then(() => {
   criarJanelaPrincipal()

@@ -10,20 +10,31 @@ let ipc = require('electron').ipcRenderer;
 window.onload = () => {
 
 
-    document.querySelector('#botao-prontuarios-e-anamnese')
-      .addEventListener('click', () => {
+    document.querySelector('#botao-prontuarios-e-anamnese').addEventListener('click', () => {
 
-        console.log('Abrindo tela de prontuário')
-        ipc.send(
-          'abrir_janela_prontuarios_e_anamnese',
-          {
-            'dados': {
-              exemplo: 'tyeste'
-            }
+      console.log('Abrindo tela de prontuário')
+      ipc.send(
+        'abrir_janela_prontuarios_e_anamnese',
+        {
+          'dados': {
+            exemplo: 'tyeste'
           }
-        )
+        }
+      )
+    })
 
-      })
+    document.querySelector('#botao-sessoes').addEventListener('click', () => {
+
+      console.log('Abrindo tela de sessoes')
+      ipc.send(
+        'abrir_janela_sessoes',
+        {
+          'dados': {
+            exemplo: 'tyeste'
+          }
+        }
+      )
+    })
 
     // members.load()
     // tables.load()

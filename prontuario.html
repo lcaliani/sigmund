@@ -11,37 +11,42 @@
     <link rel="stylesheet" type="text/css" href="css/skeleton.css">
   </head>
   <body>
-    <h1>Prontuários e anamnese</h1>
+    <div class="container">
+      <h1>Prontuários e anamnese</h1>
 
-    <form id="formulario-dados-do-paciente" style="display: inline;">
-      <h2>Dados do paciente</h2>
+      <form id="formulario-dados-do-paciente" style="display: inline;">
+        <h2>Dados do paciente</h2>
 
-      <label for="nome-paciente">nome:</label>
-      <input type="text" name="nome-paciente">
+        <label for="nome-paciente">nome:</label>
+        <input type="text" name="nome-paciente">
 
-      <label for="pai-paciente">pai:</label>
-      <input type="text" name="pai-paciente">
+        <label for="pai-paciente">pai:</label>
+        <input type="text" name="pai-paciente">
 
-      <label for="mae-paciente">mãe:</label>
-      <input type="text" name="mae-paciente">
+        <label for="mae-paciente">mãe:</label>
+        <input type="text" name="mae-paciente">
 
-      <label for="data-nascimento-paciente">data de nascimento:</label>
-      <input type="date" name="data-nascimento-paciente">
+        <label for="data-nascimento-paciente">data de nascimento:</label>
+        <input type="date" name="data-nascimento-paciente">
 
-      <label for="cidade-paciente">cidade:</label>
-      <input type="text" name="cidade-paciente">
+        <label for="cidade-paciente">cidade:</label>
+        <input type="text" name="cidade-paciente">
 
-      <label for="endereco-paciente">endereço:</label>
-      <input type="text" name="endereco-paciente">
+        <label for="endereco-paciente">endereço:</label>
+        <input type="text" name="endereco-paciente">
 
-      <label for="maioridade-paciente">paciente é menor de idade?</label>
-      <input type="checkbox" name="maioridade-paciente">
-    </form>
+        <label for="maioridade-paciente">
+          <input type="checkbox" name="maioridade-paciente">
+          <span class="label-body">paciente é menor de idade?</span>
+        </label>
+      </form>
 
-    <form id="formulario-dados-do-paciente">
-      <h2>Roteiro e anamnese</h2>
+      <form id="formulario-dados-do-paciente">
+        <h2>Roteiro e anamnese</h2>
 
-      <!-- @todo: puxar as perguntas e respostas do banco -->
-    </form>
+        <!-- @todo: puxar as perguntas e respostas do banco -->
+      </form>
+    </div>
+
   </body>
 </html>
