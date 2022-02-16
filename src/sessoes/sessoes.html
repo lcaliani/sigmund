@@ -5,16 +5,25 @@
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+
+    <link rel="stylesheet" href="../../css/normalize.css">
+    <link rel="stylesheet" href="../../css/skeleton.css">
+
+    <!-- Dependências para o calendário -->
+    <link href='../../node_modules/fullcalendar/main.css' rel='stylesheet' />
+    <script src='../../node_modules/fullcalendar/main.js'></script>
+
+    <script src="./sessoes.js"></script>
+
     <title>Sigmund 1.0 - Sessões</title>
 
-    <link rel="stylesheet" type="text/css" href="css/normalize.css">
-    <link rel="stylesheet" type="text/css" href="css/skeleton.css">
   </head>
   <body>
     <div class="container">
       <h1>Sessões</h1>
 
-      Todo: Calendário aqui
+      <button id="sessoes-adicionar-marcacao">Nova marcação</button>
+      <div id="calendar"></div>
     </div>
 
   </body>
