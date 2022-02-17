@@ -1,3 +1,5 @@
+const prontuarioPerguntas = require('./prontuario_perguntas')
+
 const ProntuarioRepositorio = require('./ProntuarioRepositorio')
 const repositorio = new ProntuarioRepositorio()
 
@@ -11,6 +13,7 @@ const NOME_TABELA_HTML = 'tabela-prontuario'
  */
 const ID_FORMULARIO_HTML = '#formulario-dados-do-paciente'
 
+
 /**
  * Mensagens de feedback
  */
@@ -18,7 +21,7 @@ const MENSAGENS = {
     zero_registros: 'Nenhum registro encontrado',
     sucesso_gravacao: 'Paciente gravado com sucesso!',
     sucesso_remocao: 'Paciente inativado com sucesso!',
-    erro_generico: 'Houve um erro ao realizar a operação. Tente novamente.'
+    erro_generico: 'Houve um erro ao realizar a operação. Tente novamente.',
 }
 
 /**
@@ -26,9 +29,7 @@ const MENSAGENS = {
  * @return {undefined}
  */
 async function inicializar() {
-
     let registros = await repositorio.index()
-
     document.querySelector(`[name="${NOME_TABELA_HTML}"] tbody`).innerHTML = montarHtmlTabela(registros)
 
     vincularAcoes()
@@ -110,6 +111,9 @@ function vincularAcoes() {
      * Limpeza dos inputs ao cancelar edição
      */
     document.querySelector(`${ID_FORMULARIO_HTML} .cancel-edit`).addEventListener('click', limparCampos)
+
+    document.querySelector(`${ID_FORMULARIO_HTML} [name="exibir_roteiro_de_anamnese"]`)
+        .addEventListener('change', alternarVisibilidadeAnamnese)
 }
 
 /**
@@ -209,6 +213,20 @@ function limparCampos(event) {
     document.querySelector(`${ID_FORMULARIO_HTML} .cancel-edit`).classList.add('d-none')
     document.querySelector(`${ID_FORMULARIO_HTML} .edit-status`).classList.add('d-none')
 }
+
+/**
+ * Alterna a visibilidade do formulário de anamnese baseado no checkbox
+ * @param {Event} event 
+ */
+function alternarVisibilidadeAnamnese(event) {
+
+    document.querySelector(prontuarioPerguntas.ID_FORMULARIO_ANAMNESE_HTML).classList
+        .toggle('d-none', event.currentTarget.checked == false)
+}
+
+// Ações
+
+prontuarioPerguntas.recuperarPerguntasAnamnese()
 
 inicializar()
 

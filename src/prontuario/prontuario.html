@@ -60,9 +60,8 @@
             
             <div class="row">
               <label for="maioridade-paciente">
-                <span class="label-body">Paciente é menor de idade?</span>
-                <input type="checkbox" name="maioridade-paciente">
-                <span id="maioridade-paciente-texto-ajuda">Não</span>
+                <span class="label-body">Exibir roteiro de anamnese?</span>
+                <input type="checkbox" name="exibir_roteiro_de_anamnese">
               </label>
             </div>
             
@@ -74,10 +73,10 @@
             <button class="cancel-edit d-none">Cancelar edição</button>
           </form>
     
-          <form id="formulario-dados-do-paciente-anamnese">
-            <h3>Roteiro e anamnese</h3>
-    
-            <!-- @todo: puxar as perguntas e respostas do banco -->
+          <form id="formulario-dados-do-paciente-anamnese" class="d-none">
+            <h3>Roteiro de anamnese</h3>
+            <div id="formulario-dados-do-paciente-anamnese-perguntas" class="row">
+            </div>
           </form>
         </div>
         <div class="five columns">
