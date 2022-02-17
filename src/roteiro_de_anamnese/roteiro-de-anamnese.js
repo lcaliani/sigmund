@@ -11,8 +11,6 @@ const NOME_TABELA_HTML = 'tabela-roteiro-de-anamnese'
  */
 const ID_FORMULARIO_HTML = '#formulario-roteiro-de-anamnese'
 
-console.log(document.querySelector('#formulario-roteiro-de-anamnese'))
-
 /**
  * Mensagens de feedback
  */
@@ -24,20 +22,33 @@ const MENSAGENS = {
 }
 
 /**
- * Carrega os membros cadastrados na tabela na tela
+ * Carrega na tela os dados cadastrados na tabela
  * @return {undefined}
  */
 async function inicializar() {
-    let tableHtml = ''
+
     let registros = await repositorio.index()
 
+    document.querySelector(`[name="${NOME_TABELA_HTML}"] tbody`).innerHTML = montarHtmlTabela(registros)
+
+    vincularAcoes()
+}
+
+/**
+ * Monta o html interativo da tabela de listagem de registros
+ * @param {object} registros Registros retornados do banco
+ * @returns {string} html do <tbody> da tabela
+ */
+function montarHtmlTabela(registros) {
+    let tableHtml = ''
     if (!registros.length) {
         tableHtml = `<tr><td colspan="6">${MENSAGENS.zero_registros}</td></tr>`
         document.querySelector(`[name="${NOME_TABELA_HTML}"] tbody`).innerHTML = tableHtml
-        return
+        return tableHtml
     }
 
     registros.forEach((registro) => {
+        // Cada campo possui seu dataset
         const datasets = `data-id="${registro.id}" data-pergunta="${registro.pergunta}" data-status="${registro.status}"`
         
         let actions = `<a href="" class="link-warning" name="edit">Editar</a> |` 
@@ -49,9 +60,7 @@ async function inicializar() {
         </tr>`
     })
 
-    document.querySelector(`[name="${NOME_TABELA_HTML}"] tbody`).innerHTML = tableHtml
-
-    vincularAcoes()
+    return tableHtml
 }
 
 /**
@@ -108,10 +117,12 @@ function preencherCampos(roteiroValores = {}) {
     
     const {id, pergunta, status} = valoresFormatados
 
+    // Campos dos dados
     document.querySelector(`${ID_FORMULARIO_HTML} input[name="id"]`).value = id
     document.querySelector(`${ID_FORMULARIO_HTML} input[name="pergunta"]`).value = pergunta
     document.querySelector(`${ID_FORMULARIO_HTML} input[name="status"]`).value = status
 
+    // Botões padrão
     document.querySelector(`${ID_FORMULARIO_HTML} .edit-status`).classList.remove('d-none')
     document.querySelector(`${ID_FORMULARIO_HTML} .cancel-edit`).classList.remove('d-none')
 }
@@ -124,7 +135,6 @@ function preencherCampos(roteiroValores = {}) {
 async function save(event) {
     event.preventDefault()
     const informacoesDoRoteiro = recuperarDadosDoFormulario()
-    console.log(informacoesDoRoteiro)
     const isUpdating = informacoesDoRoteiro.id !== null
     const wasSaved = isUpdating 
         ? await repositorio.update(informacoesDoRoteiro)
@@ -172,9 +182,13 @@ function limparCampos(event) {
     if (event !== undefined) {
         event.preventDefault();
     }
+
+    // Campos de dados
     document.querySelector(`${ID_FORMULARIO_HTML} input[name="pergunta"]`).value = ''
     document.querySelector(`${ID_FORMULARIO_HTML} input[name="id"]`).value = ''
     document.querySelector(`${ID_FORMULARIO_HTML} input[name="status"]`).value = '1' // default 1
+
+    // Botões padrão
     document.querySelector(`${ID_FORMULARIO_HTML} .cancel-edit`).classList.add('d-none')
     document.querySelector(`${ID_FORMULARIO_HTML} .edit-status`).classList.add('d-none')
 }
