@@ -15,6 +15,17 @@ CREATE TABLE IF NOT EXISTS "roteiro_de_anamnese" (
 	"data_cadastro"	DATETIME DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
+DROP TABLE IF EXISTS "respostas_do_roteiro_de_anamnese";
+CREATE TABLE IF NOT EXISTS "respostas_do_roteiro_de_anamnese" (
+	"id"	INTEGER NOT NULL UNIQUE,
+	"id_roteiro"	INTEGER NOT NULL,
+	"id_paciente"	INTEGER NOT NULL,
+	"resposta"	BLOB,
+	"data_cadastro"	NUMERIC DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY("id_paciente") REFERENCES "paciente"("id"),
+	PRIMARY KEY("id" AUTOINCREMENT),
+	FOREIGN KEY("id_roteiro") REFERENCES "roteiro_de_anamnese"("id")
+);
 DROP TABLE IF EXISTS "paciente";
 CREATE TABLE IF NOT EXISTS "paciente" (
 	"id"	INTEGER NOT NULL UNIQUE,
@@ -25,17 +36,9 @@ CREATE TABLE IF NOT EXISTS "paciente" (
 	"cidade"	TEXT NOT NULL,
 	"endereco"	TEXT NOT NULL,
 	"data_cadastro"	DATETIME DEFAULT CURRENT_TIMESTAMP,
+	"status"	INTEGER NOT NULL DEFAULT 1,
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
-DROP TABLE IF EXISTS "respostas_do_roteiro_de_anamnese";
-CREATE TABLE IF NOT EXISTS "respostas_do_roteiro_de_anamnese" (
-	"id"	INTEGER NOT NULL UNIQUE,
-	"id_roteiro"	INTEGER NOT NULL,
-	"id_paciente"	INTEGER NOT NULL,
-	"resposta"	BLOB,
-	"data_cadastro"	NUMERIC DEFAULT CURRENT_TIMESTAMP,
-	FOREIGN KEY("id_roteiro") REFERENCES "roteiro_de_anamnese"("id"),
-	FOREIGN KEY("id_paciente") REFERENCES "paciente"("id"),
-	PRIMARY KEY("id" AUTOINCREMENT)
-);
+INSERT INTO "roteiro_de_anamnese" VALUES (2,'Com quantos anos tirou a fralda?',1,'2022-02-17 15:20:32');
+INSERT INTO "roteiro_de_anamnese" VALUES (3,'Com quantos anos começou a andar?',1,'2022-02-17 15:20:41');
 COMMIT;
