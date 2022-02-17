@@ -20,7 +20,10 @@
     "electron": "^17.0.1"
   },
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.0"
+    "electron-squirrel-startup": "^1.0.0",
+    "fullcalendar": "^5.10.2",
+    "sqlite": "^4.0.23",
+    "sqlite3": "^5.0.2"
   },
   "config": {
     "forge": {

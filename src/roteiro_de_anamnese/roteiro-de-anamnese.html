@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <title>Sigmund 1.0 - Roteiro de anamnese</title>
+
+    <link rel="stylesheet" href="../../css/normalize.css">
+    <link rel="stylesheet" href="../../css/skeleton.css">
+    <link rel="stylesheet" href="../../css/estilos.css">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Roteiro de anamnese</h1>
+
+      <form id="formulario-roteiro-de-anamnese">
+        <h2>Perguntas</h2>
+
+        <span class="badge bg-warning text-dark edit-status d-none">Editando dados</span>
+        
+        <label for="pergunta">Pergunta:</label>
+        <input type="text" name="pergunta" size="60">
+
+        <input type="hidden" name="id">
+
+        <input type="hidden" name="status" value="1">
+
+        <button class="button-primary">Salvar</button>
+        <button class="cancel-edit d-none">Cancelar edição</button>
+      </form>
+      
+      <table class="u-full-width" name="tabela-roteiro-de-anamnese">
+        <thead>
+          <tr>
+            <th>Pergunta</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="conteudo-tabela-roteiro-de-anamnese">
+        </tbody>
+      </table>
+
+    </div>
+
+    <script type="text/javascript" src="./roteiro-de-anamnese.js"></script>
+  </body>
+</html>

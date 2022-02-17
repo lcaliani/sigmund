@@ -19,7 +19,7 @@ const criarJanelaPrincipal = () => {
     }
   })
 
-  janelaPrincipal.loadFile('index.html')
+  janelaPrincipal.loadFile('./src/inicio/index.html')
 
   // @todo: Deixar dinâmico somente para dev
   janelaPrincipal.webContents.openDevTools()
@@ -53,7 +53,7 @@ const criarJanelaPrincipal = () => {
  * @param {string} janelaPai
  * @return {undefined}
  **/
-function prepararJanelaDeProntuarios(janelaPai) {
+const prepararJanelaDeProntuarios = (janelaPai) => {
   ipcMain.on('abrir_janela_prontuarios_e_anamnese', (evento, dados) => {
     console.log('Abrindo janela de Prontuários e anamnese!')
 
@@ -62,10 +62,11 @@ function prepararJanelaDeProntuarios(janelaPai) {
         modal: true,
         center: true,
         title: 'Prontuários e anamnese',
-        width: 1028,
-        height: 528,
+        width: 1200,
+        height: 600,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            contextIsolation: false,
         },
         resizable: false,
     }
@@ -75,7 +76,7 @@ function prepararJanelaDeProntuarios(janelaPai) {
     /** @windows @mac only */
     janelaProntuarios.movable = false
 
-    janelaProntuarios.loadFile('prontuario.html')
+    janelaProntuarios.loadFile('./src/prontuario/prontuario.html')
     
     // janelaPai.webContents.on('did-finish-load', () => {
     //     janelaPai.webContents.openDevTools()
@@ -92,7 +93,7 @@ function prepararJanelaDeProntuarios(janelaPai) {
  * @param {string} janelaPai
  * @return {undefined}
  **/
-function prepararJanelaDeSessoes(janelaPai) {
+const prepararJanelaDeSessoes = (janelaPai) => {
     ipcMain.on('abrir_janela_sessoes', (evento, dados) => {
     console.log('Abrindo janela de sessões!')
 
@@ -101,10 +102,11 @@ function prepararJanelaDeSessoes(janelaPai) {
         modal: true,
         center: true,
         title: 'Sessões',
-        width: 1028,
-        height: 528,
+        width: 1200,
+        height: 800,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            contextIsolation: false,
         },
         resizable: false,
     }
@@ -114,7 +116,9 @@ function prepararJanelaDeSessoes(janelaPai) {
     /** @windows @mac only */
     janelaDeSessoes.movable = false
 
-    janelaDeSessoes.loadFile('sessoes.html')
+    janelaDeSessoes.loadFile('./src/sessoes/sessoes.html')
+
+    janelaDeSessoes.webContents.openDevTools()
     
     // janelaPai.webContents.on('did-finish-load', () => {
     //     janelaPai.webContents.openDevTools()
@@ -130,7 +134,7 @@ function prepararJanelaDeSessoes(janelaPai) {
  * @param {string} janelaPai
  * @return {undefined}
  **/
-function prepararJanelaDeRoteiroDeAnamnese(janelaPai) {
+const prepararJanelaDeRoteiroDeAnamnese = (janelaPai) => {
 
     console.log('Abrindo janela de Roteiro de anamnese!')
 
@@ -139,10 +143,11 @@ function prepararJanelaDeRoteiroDeAnamnese(janelaPai) {
         modal: true,
         center: true,
         title: 'Roteiro de anamnese',
-        width: 1028,
-        height: 528,
+        width: 1200,
+        height: 750,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            contextIsolation: false,
         },
         resizable: false,
     }
@@ -152,7 +157,9 @@ function prepararJanelaDeRoteiroDeAnamnese(janelaPai) {
     /** @windows @mac only */
     janelaDeRoteiro.movable = false
 
-    janelaDeRoteiro.loadFile('roteiro-de-anamnese.html')
+    janelaDeRoteiro.loadFile('./src/roteiro_de_anamnese/roteiro-de-anamnese.html')
+
+    janelaDeRoteiro.webContents.openDevTools()
 
     // janelaPai.webContents.on('did-finish-load', () => {
     //     janelaPai.webContents.openDevTools()
@@ -161,7 +168,6 @@ function prepararJanelaDeRoteiroDeAnamnese(janelaPai) {
     janelaDeRoteiro.show()
     janelaDeRoteiro.setMenu(new Menu());
 }
-
 
 
 app.whenReady().then(() => {
