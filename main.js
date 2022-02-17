@@ -77,6 +77,8 @@ const prepararJanelaDeProntuarios = (janelaPai) => {
     janelaProntuarios.movable = false
 
     janelaProntuarios.loadFile('./src/prontuario/prontuario.html')
+
+    janelaProntuarios.webContents.openDevTools()
     
     // janelaPai.webContents.on('did-finish-load', () => {
     //     janelaPai.webContents.openDevTools()
