@@ -61,7 +61,7 @@ function montarHtmlTabela(registros) {
             data-endereco="${registro.endereco}"
             data-status="${registro.status}"`
         
-        let actions = `<a href="" class="link-warning" name="edit">Editar</a> |` 
+        let actions = `<a href="" class="link-warning" name="edit">Ver/Editar</a> |` 
         actions += `<a href="" class="link-danger" name="delete">Excluir</a>`
 
         tableHtml += `<tr>
@@ -131,7 +131,7 @@ function preencherCampos(valoresDoBanco = {}) {
     for (let [chave, valor] of Object.entries(valoresDoBanco)) {
         valoresFormatados[chave] = (valor == 'null' || !valor) ? '' : valor;
     }
-    
+
     const {id, nome, nome_pai, nome_mae, data_nascimento, cidade, endereco, status} = valoresFormatados
 
     // Campos dos dados
@@ -149,9 +149,6 @@ function preencherCampos(valoresDoBanco = {}) {
     document.querySelector(`${ID_FORMULARIO_HTML} .cancel-edit`).classList.remove('d-none')
 
     prontuarioPerguntas.preencherCampos(id)
-    // pegar o id do paciente
-    // buscar no banco pelas perguntas
-    // preencher
 }
 
 /**
@@ -162,7 +159,6 @@ function preencherCampos(valoresDoBanco = {}) {
 async function save(event) {
     event.preventDefault()
     const dadosDoFormulario = recuperarDadosDoFormulario()
-    const dadosDoFormularioDeAnamnese = prontuarioPerguntas.prepararDadosDoFormulario() // id pergunta, resposta,
     
     const isUpdating = dadosDoFormulario.id !== null
     const wasSaved = isUpdating 
@@ -177,9 +173,10 @@ async function save(event) {
         return
     }
 
+    alert(message)
+
     inicializar()
     limparCampos()
-    alert(message)
 }
 
 /**
@@ -199,8 +196,9 @@ async function deleteItem(removeButtonEvent) {
         return
     }
 
-    inicializar()
     alert(message)
+
+    inicializar()
 }
 
 /**
@@ -242,11 +240,4 @@ function alternarVisibilidadeAnamnese(event) {
 }
 
 // Ações
-
-
-
 inicializar()
-
-
-
-

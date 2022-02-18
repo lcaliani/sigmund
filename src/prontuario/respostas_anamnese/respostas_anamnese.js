@@ -1,3 +1,5 @@
+const prontuarioDoPaciente = require('../prontuario')
+
 const RoteiroDeAnamneseRepositorio = require('../../roteiro_de_anamnese/RoteiroDeAnamneseRepositorio')
 const perguntasRepositorio = new RoteiroDeAnamneseRepositorio()
 
@@ -96,11 +98,12 @@ async function preencherCampos(idPaciente) {
     let registros = await respostasRepositorio.buscarRespostasPorIdDoPaciente(idPaciente)
     registros.forEach((resposta) => {
         const campoDeResposta = `${ID_FORMULARIO_ANAMNESE_HTML} textarea[data-id_roteiro="${resposta.id_roteiro}"]`
-        document.querySelector(campoDeResposta).value = resposta.resposta || ''
-        document.querySelector(campoDeResposta).dataset.id_paciente = idPaciente
-        document.querySelector(campoDeResposta).dataset.id_resposta = resposta.id
+            document.querySelector(campoDeResposta).value = resposta.resposta || ''
+            document.querySelector(campoDeResposta).dataset.id_paciente = idPaciente
+            document.querySelector(campoDeResposta).dataset.id_resposta = resposta.id
     })
 
+    document.querySelector(`${ID_FORMULARIO_ANAMNESE_HTML} button`).removeAttribute('disabled')
 }
 
 /**
@@ -118,12 +121,13 @@ function limparCampos(event) {
         textArea.dataset.id_paciente = ''
         textArea.value = ''
     })
+    document.querySelector(`${ID_FORMULARIO_ANAMNESE_HTML} button`).setAttribute('disabled', 'true')
 }
 
+/**
+ * Vincula o envio do formulario ao método save, para persistir os dados
+ */
 function vincularAcoes() {
-    /**
-     * Gravação 
-     */
     document.querySelector(`${ID_FORMULARIO_ANAMNESE_HTML}`).addEventListener('submit', save)
 }
 /**
@@ -145,9 +149,10 @@ async function save(event) {
         return
     }
 
+    alert(message)
+
     inicializar()
     limparCampos()
-    alert(message)
 }
 
 module.exports = {

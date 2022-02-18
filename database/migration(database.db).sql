@@ -39,6 +39,5 @@ CREATE TABLE IF NOT EXISTS "paciente" (
 	"status"	INTEGER NOT NULL DEFAULT 1,
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
-INSERT INTO "roteiro_de_anamnese" VALUES (2,'Com quantos anos tirou a fralda?',1,'2022-02-17 15:20:32');
-INSERT INTO "roteiro_de_anamnese" VALUES (3,'Com quantos anos começou a andar?',1,'2022-02-17 15:20:41');
+
 COMMIT;

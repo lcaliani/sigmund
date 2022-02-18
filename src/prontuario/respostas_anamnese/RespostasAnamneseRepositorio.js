@@ -162,12 +162,18 @@ class RespostasAnamneseRepositorio extends Repositorio {
     }
 
     /**
-     * Recupera as respostas das perguntas do paciente
+     * Recupera as respostas das perguntas ativas do paciente
      * @param {int} idPaciente 
      * @returns {Promise<array<object>>}
      */
     async buscarRespostasPorIdDoPaciente(idPaciente) {
-        const query = `SELECT * FROM ${this.TABLE} WHERE ${this.campos.id_paciente} = ${idPaciente} ORDER by ${this.campos.id}`
+        const query = `SELECT *
+            FROM ${this.TABLE} respostas
+            JOIN roteiro_de_anamnese perguntas
+            WHERE respostas.id_roteiro = perguntas.id
+                AND ${this.campos.id_paciente} = ${idPaciente}
+                AND perguntas.status = 1
+            ORDER by ${this.campos.id}`
         return await this.all(query)
     }
 
