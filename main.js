@@ -35,7 +35,7 @@ const criarJanelaPrincipal = () => {
       label: 'Administração',
       submenu: [
           {
-              label: 'Roteiro de anamnese',
+              label: 'Perguntas do roteiro de anamnese',
               acelerator: process.platform === 'darwin' ? 'Alt+Cmd+I' : 'Alt+Shift+A',
               click: () => {
                 prepararJanelaDeRoteiroDeAnamnese(janelaPrincipal)

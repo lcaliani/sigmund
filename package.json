@@ -23,7 +23,8 @@
     "electron-squirrel-startup": "^1.0.0",
     "fullcalendar": "^5.10.2",
     "sqlite": "^4.0.23",
-    "sqlite3": "^5.0.2"
+    "sqlite3": "^5.0.2",
+    "sqlite3-transactions": "0.0.5"
   },
   "config": {
     "forge": {

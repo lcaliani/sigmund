@@ -1,4 +1,4 @@
-const prontuarioPerguntas = require('./prontuario_perguntas')
+const prontuarioPerguntas = require('./respostas_anamnese/respostas_anamnese')
 
 const ProntuarioRepositorio = require('./ProntuarioRepositorio')
 const repositorio = new ProntuarioRepositorio()
@@ -31,6 +31,8 @@ const MENSAGENS = {
 async function inicializar() {
     let registros = await repositorio.index()
     document.querySelector(`[name="${NOME_TABELA_HTML}"] tbody`).innerHTML = montarHtmlTabela(registros)
+
+    await prontuarioPerguntas.inicializar()
 
     vincularAcoes()
 }
@@ -112,6 +114,9 @@ function vincularAcoes() {
      */
     document.querySelector(`${ID_FORMULARIO_HTML} .cancel-edit`).addEventListener('click', limparCampos)
 
+    /**
+     * Visibilidade dos inputs de roteiro de anamnese
+     */
     document.querySelector(`${ID_FORMULARIO_HTML} [name="exibir_roteiro_de_anamnese"]`)
         .addEventListener('change', alternarVisibilidadeAnamnese)
 }
@@ -142,6 +147,11 @@ function preencherCampos(valoresDoBanco = {}) {
     // Botões padrão
     document.querySelector(`${ID_FORMULARIO_HTML} .edit-status`).classList.remove('d-none')
     document.querySelector(`${ID_FORMULARIO_HTML} .cancel-edit`).classList.remove('d-none')
+
+    prontuarioPerguntas.preencherCampos(id)
+    // pegar o id do paciente
+    // buscar no banco pelas perguntas
+    // preencher
 }
 
 /**
@@ -152,6 +162,8 @@ function preencherCampos(valoresDoBanco = {}) {
 async function save(event) {
     event.preventDefault()
     const dadosDoFormulario = recuperarDadosDoFormulario()
+    const dadosDoFormularioDeAnamnese = prontuarioPerguntas.prepararDadosDoFormulario() // id pergunta, resposta,
+    
     const isUpdating = dadosDoFormulario.id !== null
     const wasSaved = isUpdating 
         ? await repositorio.update(dadosDoFormulario)
@@ -193,6 +205,7 @@ async function deleteItem(removeButtonEvent) {
 
 /**
  * Limpa os inputs e oculta o botão de "cancelar edição"
+ * 
  */
 function limparCampos(event) {
 
@@ -200,6 +213,7 @@ function limparCampos(event) {
         event.preventDefault();
     }
 
+    // dados do paciente
     document.querySelector(`${ID_FORMULARIO_HTML} input[name="id"]`).value = ''
     document.querySelector(`${ID_FORMULARIO_HTML} input[name="nome"]`).value = ''
     document.querySelector(`${ID_FORMULARIO_HTML} input[name="nome_pai"]`).value = ''
@@ -212,6 +226,9 @@ function limparCampos(event) {
     // Botões padrão
     document.querySelector(`${ID_FORMULARIO_HTML} .cancel-edit`).classList.add('d-none')
     document.querySelector(`${ID_FORMULARIO_HTML} .edit-status`).classList.add('d-none')
+
+    // Resposta
+    prontuarioPerguntas.limparCampos(event)
 }
 
 /**
@@ -226,7 +243,7 @@ function alternarVisibilidadeAnamnese(event) {
 
 // Ações
 
-prontuarioPerguntas.recuperarPerguntasAnamnese()
+
 
 inicializar()
 
