@@ -33,7 +33,7 @@
           <span class="close">&times;</span>
           <h2>Marcação de sessão</h2>
 
-          <form id="formulario-roteiro-de-anamnese" class="form formulario-roteiro-de-anamnese">
+          <form id="formulario-sessao" class="form formulario-sessao">
             <span class="badge bg-warning text-dark edit-status d-none">Editando dados</span>
 
             <div class="row">
@@ -41,9 +41,7 @@
                 <label for="id_paciente">Paciente:</label>
               </div>
               <div class="two columns">
-                <select name="id_paciente" id="">
-                  <option value="1">Leonardo Caliani Ruellas</option>
-                  <option value="2">Joao</option>
+                <select name="id_paciente" id="id_paciente">
                 </select>
               </div>
             </div>
@@ -51,28 +49,26 @@
             <div class="row">
               <div class="four columns">
                 <label for="">De:</label>
-                <input name="data_inicio" id="" type="date"></input>
-                <input name="hora_inicio" id="" type="time"></input>
+                <input required name="data_inicio" id="" type="date"></input>
+                <input required name="hora_inicio" id="" type="time"></input>
               </div>
               <div class="four columns">
                 <label for="">Até:</label>
-                <input name="data_fim" id="" type="date"></input>
-                <input name="hora_fim" id="" type="time"></input>
+                <input required name="data_fim" id="" type="date"></input>
+                <input required name="hora_fim" id="" type="time"></input>
               </div>
-
-  
-
             </div>
 
-
             <label for="descricao">Descricao:</label>
-            <textarea name="descricao" id="" class="u-full-width" cols="30" rows="30"></textarea>
+            <textarea name="descricao" id="" class="u-full-width" cols="30" rows="30" value=""></textarea>
     
             <input type="hidden" name="id">
     
             <input type="hidden" name="id_paciente">
+
+            <input type="hidden" name="status" value="1">
     
-            <button class="button-primary">Salvar</button>
+            <button type="submit" class="button-primary">Salvar</button>
             <button class="cancel-edit d-none">Cancelar edição</button>
           </form>
         </div>

@@ -9,7 +9,7 @@ button:disabled:hover {
   cursor: not-allowed;
 }
 
-/* Override de estilos dos botões do calendário */
+/* ### Override de estilos do calendário */
 .fc-icon-chevron-left:before {
   content: "<" !important;
 }
@@ -18,7 +18,13 @@ button:disabled:hover {
   content: ">" !important;
 }
 
-/* Sessão */
+/* Remoção de espaços de cima e de baixo da tabela */
+.fc-col-header,
+tr[role="presentation"].fc-scrollgrid-section-body table {
+  margin-bottom: 0;
+}
+
+/* ### Sessão */
 .formulario-roteiro-de-anamnese textarea {
   height: 330px;
 }
