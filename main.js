@@ -32,10 +32,10 @@ const criarJanelaPrincipal = () => {
   // Setando menu na tela inicial
   const menu = new Menu()
   menu.append(new MenuItem({
-      label: 'Adminstração',
+      label: 'Administração',
       submenu: [
           {
-              label: 'Roteiro de anamnese',
+              label: 'Perguntas do roteiro de anamnese',
               acelerator: process.platform === 'darwin' ? 'Alt+Cmd+I' : 'Alt+Shift+A',
               click: () => {
                 prepararJanelaDeRoteiroDeAnamnese(janelaPrincipal)
@@ -63,7 +63,7 @@ const prepararJanelaDeProntuarios = (janelaPai) => {
         center: true,
         title: 'Prontuários e anamnese',
         width: 1200,
-        height: 600,
+        height: 768,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
@@ -77,6 +77,8 @@ const prepararJanelaDeProntuarios = (janelaPai) => {
     janelaProntuarios.movable = false
 
     janelaProntuarios.loadFile('./src/prontuario/prontuario.html')
+
+    janelaProntuarios.webContents.openDevTools()
     
     // janelaPai.webContents.on('did-finish-load', () => {
     //     janelaPai.webContents.openDevTools()

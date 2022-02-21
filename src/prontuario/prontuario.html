@@ -9,44 +9,98 @@
 
     <link rel="stylesheet" href="../../css/normalize.css">
     <link rel="stylesheet" href="../../css/skeleton.css">
+    <link rel="stylesheet" href="../../css/estilos.css">
   </head>
   <body>
     <div class="container">
       <h1>Prontuários e anamnese</h1>
+      
+      <div class="row">
+        <div class="seven columns">
+          <form id="formulario-dados-do-paciente">
+            <h3>Dados do paciente</h3>
 
-      <form id="formulario-dados-do-paciente" style="display: inline;">
-        <h2>Dados do paciente</h2>
+            <span class="badge bg-warning text-dark edit-status d-none">Editando dados</span>
 
-        <label for="nome-paciente">nome:</label>
-        <input type="text" name="nome-paciente">
+            <div class="row">
+              <div class="twelve columns">
+                <label for="nome">Nome:</label>
+                <input type="text" class="u-full-width" name="nome">
+              </div>
+            </div>
+    
+            <div class="row">
+              <div class="six columns">
+                <label for="nome_pai">Pai:</label>
+                <input type="text" class="u-full-width" name="nome_pai">
+              </div>
+              
+              <div class="six columns">
+                <label for="nome_mae">Mãe:</label>
+                <input type="text" class="u-full-width" name="nome_mae">
+              </div>
+            </div>
+    
+            <div class="row">
+              <label for="data_nascimento">Data de nascimento:</label>
+              <input type="date" name="data_nascimento">
+            </div>
+    
+            <div class="row">
+              <div class="five columns">
+                <label for="cidade">Cidade:</label>
+                <input type="text" class="u-full-width" name="cidade">
+              </div>
+              
+              <div class="seven columns">
+                <label for="endereco">Endereço:</label>
+                <input type="text" class="u-full-width" name="endereco">
+              </div>
+            </div>
+            
+            <div class="row">
+              <label for="maioridade-paciente">
+                <span class="label-body">Exibir roteiro de anamnese?</span>
+                <input type="checkbox" name="exibir_roteiro_de_anamnese">
+              </label>
+            </div>
+            
+            <input type="hidden" name="status" value="1">
 
-        <label for="pai-paciente">pai:</label>
-        <input type="text" name="pai-paciente">
+            <input type="hidden" name="id">
 
-        <label for="mae-paciente">mãe:</label>
-        <input type="text" name="mae-paciente">
+            <button class="button-primary">Salvar dados do paciente</button>
+            <button class="cancel-edit d-none">Cancelar edição</button>
+          </form>
+    
+          <form id="formulario-dados-do-paciente-anamnese" class="d-none">
+            <h3>Roteiro de anamnese</h3>
+            <div id="formulario-dados-do-paciente-anamnese-perguntas" class="row">
+            </div>
 
-        <label for="data-nascimento-paciente">data de nascimento:</label>
-        <input type="date" name="data-nascimento-paciente">
+            <button disabled 
+              class="button-primary"
+              title="Salvar respostas (disponível somente após cadastro do paciente)">
+                Salvar respostas
+              </button>
+          </form>
+        </div>
+        <div class="five columns">
+          <table class="u-full-width" name="tabela-prontuario">
+            <thead>
+              <tr>
+                <th>Paciente</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="conteudo-tabela-prontuario">
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-        <label for="cidade-paciente">cidade:</label>
-        <input type="text" name="cidade-paciente">
-
-        <label for="endereco-paciente">endereço:</label>
-        <input type="text" name="endereco-paciente">
-
-        <label for="maioridade-paciente">
-          <span class="label-body">paciente é menor de idade?</span>
-          <input type="checkbox" name="maioridade-paciente">
-        </label>
-      </form>
-
-      <form id="formulario-dados-do-paciente">
-        <h2>Roteiro e anamnese</h2>
-
-        <!-- @todo: puxar as perguntas e respostas do banco -->
-      </form>
     </div>
-
+  
+    <script type="text/javascript" src="./prontuario.js"></script>
   </body>
 </html>

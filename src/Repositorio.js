@@ -32,6 +32,7 @@ class Repository {
         let results = []
         sqlite3.verbose()
         const database = await this.createDbConnection(this.DATABASE)
+        console.log(query)
         try {
             results = await database.all(query, [])
         } catch (error) {
