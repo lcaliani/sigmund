@@ -160,6 +160,8 @@ const limparCampos = () => {
  * Inicializa o calendário na tela, montando o template e carregando os dados
  */
 const inicializarCalendario = () => {
+  const data = new Date()
+  const horaAtual = `${data.getHours()}:${data.getMinutes()}}`
   let elementoCalendario = document.getElementById('calendar');
   let calendario = new FullCalendar.Calendar(elementoCalendario, {
     // layout
@@ -181,6 +183,7 @@ const inicializarCalendario = () => {
       minute: '2-digit',
       hour12: false
     },
+    scrollTime: horaAtual,
     eventClick: (info) => {
       alert('Event: ' + info.event.title);
       alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
