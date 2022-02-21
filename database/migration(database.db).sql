@@ -14,9 +14,9 @@ CREATE TABLE IF NOT EXISTS "respostas_do_roteiro_de_anamnese" (
 	"id_paciente"	INTEGER NOT NULL,
 	"resposta"	BLOB,
 	"data_cadastro"	NUMERIC DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY("id" AUTOINCREMENT),
 	FOREIGN KEY("id_paciente") REFERENCES "paciente"("id"),
-	FOREIGN KEY("id_roteiro") REFERENCES "roteiro_de_anamnese"("id")
+	FOREIGN KEY("id_roteiro") REFERENCES "roteiro_de_anamnese"("id"),
+	PRIMARY KEY("id" AUTOINCREMENT)
 );
 DROP TABLE IF EXISTS "paciente";
 CREATE TABLE IF NOT EXISTS "paciente" (
@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS "sessao" (
 	"data_hora_inicio"	TEXT NOT NULL,
 	"data_hora_fim"	TEXT NOT NULL,
 	"data_cadastro"	DATETIME DEFAULT CURRENT_TIMESTAMP,
+	"status"	INTEGER NOT NULL DEFAULT 1,
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
 COMMIT;
