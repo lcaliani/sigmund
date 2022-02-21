@@ -14,6 +14,8 @@
     <link href='../../node_modules/fullcalendar/main.css' rel='stylesheet' />
     <script src='../../node_modules/fullcalendar/main.js'></script>
 
+    <link href="../plugins/modal/modal.css" rel='stylesheet' />
+
     <script src="./sessoes.js"></script>
 
     <title>Sigmund 1.0 - Sessões</title>
@@ -24,6 +26,59 @@
       <h1>Sessões</h1>
 
       <button id="sessoes-adicionar-marcacao">Nova marcação</button>
+
+      <div id="modal-marcar-sessao" class="modal">
+
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <h2>Marcação de sessão</h2>
+
+          <form id="formulario-roteiro-de-anamnese" class="form formulario-roteiro-de-anamnese">
+            <span class="badge bg-warning text-dark edit-status d-none">Editando dados</span>
+
+            <div class="row">
+              <div class="two columns">
+                <label for="id_paciente">Paciente:</label>
+              </div>
+              <div class="two columns">
+                <select name="id_paciente" id="">
+                  <option value="1">Leonardo Caliani Ruellas</option>
+                  <option value="2">Joao</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="four columns">
+                <label for="">De:</label>
+                <input name="data_inicio" id="" type="date"></input>
+                <input name="hora_inicio" id="" type="time"></input>
+              </div>
+              <div class="four columns">
+                <label for="">Até:</label>
+                <input name="data_fim" id="" type="date"></input>
+                <input name="hora_fim" id="" type="time"></input>
+              </div>
+
+  
+
+            </div>
+
+
+            <label for="descricao">Descricao:</label>
+            <textarea name="descricao" id="" class="u-full-width" cols="30" rows="30"></textarea>
+    
+            <input type="hidden" name="id">
+    
+            <input type="hidden" name="id_paciente">
+    
+            <button class="button-primary">Salvar</button>
+            <button class="cancel-edit d-none">Cancelar edição</button>
+          </form>
+        </div>
+
+      </div>
+
       <div id="calendar"></div>
     </div>
 

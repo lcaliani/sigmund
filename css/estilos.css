@@ -9,10 +9,16 @@ button:disabled:hover {
   cursor: not-allowed;
 }
 
+/* Override de estilos dos botões do calendário */
 .fc-icon-chevron-left:before {
   content: "<" !important;
 }
 
 .fc-icon-chevron-right:before {
   content: ">" !important;
+}
+
+/* Sessão */
+.formulario-roteiro-de-anamnese textarea {
+  height: 330px;
 }

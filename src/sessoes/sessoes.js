@@ -4,11 +4,6 @@ const modal = require('../plugins/modal/modal')
 document.addEventListener('DOMContentLoaded', function() {
   var calendarEl = document.getElementById('calendar');
   var calendar = new FullCalendar.Calendar(calendarEl, {
-    // initialView: 'dayGridMonth'
-    // initialView: 'listWeek',
-    // initialView: 'listDay',
-    // initialView: 'listDay',
-
     // layout
     initialView: 'timeGridWeek',
     allDaySlot: false,
@@ -20,6 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
     buttonText: {
       today: 'Hoje',
     },
+    height: 585,
+
 
     // Idioma
     locale: 'pt-br',
@@ -63,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   console.log(calendar)
 
-  modal.setUpModal('myModal', 'sessoes-adicionar-marcacao')
+  modal.setUpModal('modal-marcar-sessao', 'sessoes-adicionar-marcacao')
   document.querySelector('#sessoes-adicionar-marcacao').addEventListener('click', () => {
     // alert('Aqui será aberto um modal para o preenchimento da nova marcação. See: https://fullcalendar.io/docs/Calendar-addEvent')
     // calendar.addEvent({
