@@ -13,9 +13,16 @@ document.addEventListener('DOMContentLoaded', function() {
     initialView: 'timeGridWeek',
     allDaySlot: false,
     nowIndicator: true,
+    buttonIcons: {
+      prev: 'chevron-left',
+      next: 'chevron-right',
+    },
+    buttonText: {
+      today: 'Hoje',
+    },
 
     // Idioma
-    locale: 'pt-BR',
+    locale: 'pt-br',
 
     eventTimeFormat: { // like '14:30:00'
       hour: '2-digit',

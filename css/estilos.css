@@ -8,3 +8,11 @@ button:disabled:hover {
   border-color: #c0c0c0;
   cursor: not-allowed;
 }
+
+.fc-icon-chevron-left:before {
+  content: "<" !important;
+}
+
+.fc-icon-chevron-right:before {
+  content: ">" !important;
+}
