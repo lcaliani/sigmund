@@ -25,6 +25,6 @@ tr[role="presentation"].fc-scrollgrid-section-body table {
 }
 
 /* ### Sessão */
-.formulario-roteiro-de-anamnese textarea {
-  height: 330px;
+.formulario-sessao textarea {
+  height: 320px;
 }

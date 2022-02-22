@@ -6,10 +6,14 @@ const ProntuarioRepositorio = new (require('../prontuario/ProntuarioRepositorio'
 const repositorio = new (require('./SessaoRepositorio'))
 
 /**
- * Id do modal de marcação de sessão
+ * Modal de marcação de sessão
  */
-const MODAL_ID = '#modal-marcar-sessao'
-
+const MODAL = {
+  ID_SELETOR: '#modal-marcar-sessao',
+  ID: 'modal-marcar-sessao',
+  ID_BOTAO_SELETOR: '#sessoes-adicionar-marcacao',
+  ID_BOTAO: 'sessoes-adicionar-marcacao',
+}
 /**
 * Seletor que identifica o formulário de manipulação de dados desse contexto
 */
@@ -31,7 +35,7 @@ const MENSAGENS = {
  */
 async function inicializar() {
   inicializarCalendario()
-  modal.setUpModal('modal-marcar-sessao', 'sessoes-adicionar-marcacao')
+  modal.setUpModal(MODAL.ID, MODAL.ID_BOTAO)
 
   document.querySelector(`${ID_FORMULARIO_HTML} select[name="id_paciente"]`).innerHTML = await montarSelectHtml()
 
@@ -54,12 +58,33 @@ const recuperarSessoes = async (calendario) => {
   }
   
   registros.forEach((sessao) => {
-    calendario.addEvent({
-        title: sessao.nome_paciente,
-        start: sessao.data_hora_inicio,
-        end: sessao.data_hora_fim,
+    const dataHoraInicio = new Date(sessao.data_hora_inicio)
+    const dataHoraFim = new Date(sessao.data_hora_fim)
+    
+    const mesInicio = (dataHoraInicio.getMonth() + 1) >= 10
+      ? (dataHoraInicio.getMonth() + 1)
+      : '0' + (dataHoraInicio.getMonth() + 1)
+    
+    const mesFim = (dataHoraFim.getMonth() + 1) >= 10
+      ? (dataHoraFim.getMonth() + 1)
+      : '0' + (dataHoraFim.getMonth() + 1)
+
+    const event = {
+      title: sessao.nome_paciente,
+      start: sessao.data_hora_inicio,
+      end: sessao.data_hora_fim,
+      extendedProps: {
+        id_paciente: sessao.id_paciente,
+        data_inicio: `${dataHoraInicio.getFullYear()}-${mesInicio}-${dataHoraInicio.getDate()}`,
+        hora_inicio: `${dataHoraInicio.getHours()}:${dataHoraInicio.getMinutes()}`,
+        data_fim: `${dataHoraFim.getFullYear()}-${mesFim}-${dataHoraFim.getDate()}`,
+        hora_fim: `${dataHoraFim.getHours()}:${dataHoraFim.getMinutes()}`,
+        descricao: sessao.descricao,
+        status: sessao.status,
+        id: sessao.id,
       }
-    )
+    }
+    calendario.addEvent(event)
   })
 }
 /**
@@ -68,7 +93,6 @@ const recuperarSessoes = async (calendario) => {
  */
 const montarSelectHtml = async () => {
   const pacientes = await ProntuarioRepositorio.index('nome')
-  console.log('pacientes: ', pacientes)
   if (pacientes.length === 0) {
     return '<option value="" disabled selected>Não foram encontrados pacientes ativos</option>'
   }
@@ -87,13 +111,16 @@ const montarSelectHtml = async () => {
 const vincularAcoes = () => {
   // Gravar dados
   document.querySelector(ID_FORMULARIO_HTML).addEventListener('submit', save)
+
+  // Limpeza dos inputs ao cancelar edição
+  document.querySelector(`${ID_FORMULARIO_HTML} .cancel-edit`).addEventListener('click', limparCampos)
 }
 
 /**
  * Recupera os valores dos inputs do prontuario no formato {input-name: value}
  * @return {object}
  */
- function recuperarDadosDoFormulario() {
+function recuperarDadosDoFormulario() {
   let inputs = Array.from(document.querySelectorAll(`${ID_FORMULARIO_HTML} input,textarea`))
       
   inputs = inputs.reduce((accumulator, input) =>
@@ -103,7 +130,6 @@ const vincularAcoes = () => {
   // Formatação dos dados de data e hora
   inputs.data_hora_inicio = inputs.data_inicio + ' ' + inputs.hora_inicio
   inputs.data_hora_fim = inputs.data_fim + ' ' + inputs.hora_fim
-  
   delete inputs.data_inicio
   delete inputs.hora_inicio
   delete inputs.data_fim
@@ -139,7 +165,7 @@ const save = async (event) => {
   alert(message)
 
   // Fechar o modal
-  document.querySelector(`${MODAL_ID} .close`).click()
+  document.querySelector(`${MODAL.ID_SELETOR} .close`).click()
 
   // Limpar o modal
   limparCampos()
@@ -151,9 +177,45 @@ const save = async (event) => {
 /**
  * Limpa os campos do formulário, voltando ao estado inicial
  */
-const limparCampos = () => {
+const limparCampos = (event) => {
+  if (event !== undefined) {
+    event.preventDefault();
+  }
+
   document.querySelector(ID_FORMULARIO_HTML).reset()
   document.querySelector(`${ID_FORMULARIO_HTML} input[name="status"]`).value = 1
+
+  modal.closeModal(MODAL.ID)
+}
+
+/**
+ * Preenche os inputs com os valores recebidos
+ * @param {object} valores 
+ * @return {undefined}
+ */
+const preencherCampos = ({
+  id_paciente,
+  data_inicio,
+  hora_inicio,
+  data_fim,
+  hora_fim,
+  descricao,
+  status,
+  id
+} = valores) => {
+  // Campos dos dados
+  document.querySelector(`${ID_FORMULARIO_HTML} [name="id_paciente"]`).value = id_paciente
+  document.querySelector(`${ID_FORMULARIO_HTML} [name="data_inicio"]`).value = data_inicio
+  document.querySelector(`${ID_FORMULARIO_HTML} [name="hora_inicio"]`).value = hora_inicio
+  document.querySelector(`${ID_FORMULARIO_HTML} [name="data_fim"]`).value = data_fim
+  document.querySelector(`${ID_FORMULARIO_HTML} [name="hora_fim"]`).value = hora_fim
+  document.querySelector(`${ID_FORMULARIO_HTML} [name="descricao"]`).value = descricao
+  document.querySelector(`${ID_FORMULARIO_HTML} [name="status"]`).value = status
+  document.querySelector(`${ID_FORMULARIO_HTML} [name="id"]`).value = id
+
+  // Botões padrão
+  document.querySelector(`${ID_FORMULARIO_HTML} .edit-status`).classList.remove('d-none')
+  document.querySelector(`${ID_FORMULARIO_HTML} .cancel-edit`).classList.remove('d-none')
 }
 
 /**
@@ -185,12 +247,8 @@ const inicializarCalendario = () => {
     },
     scrollTime: horaAtual,
     eventClick: (info) => {
-      alert('Event: ' + info.event.title);
-      alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
-      alert('View: ' + info.view.type);
-  
-      // change the border color just for fun
-      info.el.style.borderColor = 'red';
+      preencherCampos(info.event.extendedProps)
+      modal.openModal(MODAL.ID_BOTAO)
     }
   });
 
