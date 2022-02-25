@@ -5,6 +5,8 @@ const ProntuarioRepositorio = new (require('../prontuario/ProntuarioRepositorio'
 
 const repositorio = new (require('./SessaoRepositorio'))
 
+const DateHelper = require('../plugins/date/DateHelper')
+
 /**
  * Modal de marcação de sessão
  */
@@ -58,16 +60,8 @@ const recuperarSessoes = async (calendario) => {
   }
   
   registros.forEach((sessao) => {
-    const dataHoraInicio = new Date(sessao.data_hora_inicio)
-    const dataHoraFim = new Date(sessao.data_hora_fim)
-    
-    const mesInicio = (dataHoraInicio.getMonth() + 1) >= 10
-      ? (dataHoraInicio.getMonth() + 1)
-      : '0' + (dataHoraInicio.getMonth() + 1)
-    
-    const mesFim = (dataHoraFim.getMonth() + 1) >= 10
-      ? (dataHoraFim.getMonth() + 1)
-      : '0' + (dataHoraFim.getMonth() + 1)
+    const dataHoraInicio = new DateHelper(sessao.data_hora_inicio)
+    const dataHoraFim = new DateHelper(sessao.data_hora_fim)
 
     const event = {
       title: sessao.nome_paciente,
@@ -75,10 +69,10 @@ const recuperarSessoes = async (calendario) => {
       end: sessao.data_hora_fim,
       extendedProps: {
         id_paciente: sessao.id_paciente,
-        data_inicio: `${dataHoraInicio.getFullYear()}-${mesInicio}-${dataHoraInicio.getDate()}`,
-        hora_inicio: `${dataHoraInicio.getHours()}:${dataHoraInicio.getMinutes()}`,
-        data_fim: `${dataHoraFim.getFullYear()}-${mesFim}-${dataHoraFim.getDate()}`,
-        hora_fim: `${dataHoraFim.getHours()}:${dataHoraFim.getMinutes()}`,
+        data_inicio: dataHoraInicio.date,
+        hora_inicio: dataHoraInicio.time,
+        data_fim: dataHoraFim.date,
+        hora_fim: dataHoraFim.time,
         descricao: sessao.descricao,
         status: sessao.status,
         id: sessao.id,
@@ -204,14 +198,30 @@ const preencherCampos = ({
   id
 } = valores) => {
   // Campos dos dados
-  document.querySelector(`${ID_FORMULARIO_HTML} [name="id_paciente"]`).value = id_paciente
-  document.querySelector(`${ID_FORMULARIO_HTML} [name="data_inicio"]`).value = data_inicio
-  document.querySelector(`${ID_FORMULARIO_HTML} [name="hora_inicio"]`).value = hora_inicio
-  document.querySelector(`${ID_FORMULARIO_HTML} [name="data_fim"]`).value = data_fim
-  document.querySelector(`${ID_FORMULARIO_HTML} [name="hora_fim"]`).value = hora_fim
-  document.querySelector(`${ID_FORMULARIO_HTML} [name="descricao"]`).value = descricao
-  document.querySelector(`${ID_FORMULARIO_HTML} [name="status"]`).value = status
-  document.querySelector(`${ID_FORMULARIO_HTML} [name="id"]`).value = id
+  if (id_paciente) {
+    document.querySelector(`${ID_FORMULARIO_HTML} [name="id_paciente"]`).value = id_paciente
+  }
+  if (data_inicio) {
+    document.querySelector(`${ID_FORMULARIO_HTML} [name="data_inicio"]`).value = data_inicio
+  }
+  if (hora_inicio) {
+    document.querySelector(`${ID_FORMULARIO_HTML} [name="hora_inicio"]`).value = hora_inicio
+  }
+  if (data_fim) {
+    document.querySelector(`${ID_FORMULARIO_HTML} [name="data_fim"]`).value = data_fim
+  }
+  if (hora_fim) {
+    document.querySelector(`${ID_FORMULARIO_HTML} [name="hora_fim"]`).value = hora_fim
+  }
+  if (descricao) {
+    document.querySelector(`${ID_FORMULARIO_HTML} [name="descricao"]`).value = descricao
+  }
+  if (status) {
+    document.querySelector(`${ID_FORMULARIO_HTML} [name="status"]`).value = status
+  }
+  if (id) {
+    document.querySelector(`${ID_FORMULARIO_HTML} [name="id"]`).value = id
+  }
 
   // Botões padrão
   document.querySelector(`${ID_FORMULARIO_HTML} .edit-status`).classList.remove('d-none')
@@ -248,6 +258,16 @@ const inicializarCalendario = () => {
     scrollTime: horaAtual,
     eventClick: (info) => {
       preencherCampos(info.event.extendedProps)
+      modal.openModal(MODAL.ID_BOTAO)
+    },
+    dateClick: (info) => {
+      const dataHora = new DateHelper(info.dateStr)
+      const campos = {
+        data_inicio: dataHora.date,
+        hora_inicio: dataHora.time,
+        data_fim: dataHora.date,
+      }
+      preencherCampos(campos)
       modal.openModal(MODAL.ID_BOTAO)
     }
   });
