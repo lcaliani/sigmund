@@ -10,8 +10,8 @@ const path = require('path')
 
 const criarJanelaPrincipal = () => {
   const janelaPrincipal = new BrowserWindow({
-    width: 1200,
-    height: 600,
+    width: 1280,
+    height: 720,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
@@ -62,8 +62,8 @@ const prepararJanelaDeProntuarios = (janelaPai) => {
         modal: true,
         center: true,
         title: 'Prontuários e anamnese',
-        width: 1200,
-        height: 768,
+        width: 1280,
+        height: 720,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
@@ -104,8 +104,8 @@ const prepararJanelaDeSessoes = (janelaPai) => {
         modal: true,
         center: true,
         title: 'Sessões',
-        width: 1200,
-        height: 800,
+        width: 1280,
+        height: 720,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
@@ -145,8 +145,8 @@ const prepararJanelaDeRoteiroDeAnamnese = (janelaPai) => {
         modal: true,
         center: true,
         title: 'Roteiro de anamnese',
-        width: 1200,
-        height: 750,
+        width: 1280,
+        height: 720,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,

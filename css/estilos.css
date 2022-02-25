@@ -8,3 +8,36 @@ button:disabled:hover {
   border-color: #c0c0c0;
   cursor: not-allowed;
 }
+
+/* ### Override de estilos do calendário */
+.fc-icon-chevron-left:before {
+  content: "<" !important;
+}
+
+.fc-icon-chevron-right:before {
+  content: ">" !important;
+}
+
+/* Remoção de espaços de cima e de baixo da tabela */
+.fc-col-header,
+tr[role="presentation"].fc-scrollgrid-section-body table {
+  margin-bottom: 0;
+}
+
+/* ### Sessão */
+.formulario-sessao textarea {
+  height: 320px;
+}
+
+/* ### Estilos básicos para complementar o skeleton.css */
+.button-danger {
+  background-color: #e97979;
+  color: #ffffff;
+  border-color: #e97979;
+}
+
+.button-danger:hover {
+  background-color:   #ef5c5c;
+  color: #ffffff;
+  border-color:   #ef5c5c;
+}
