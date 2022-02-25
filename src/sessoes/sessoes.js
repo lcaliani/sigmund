@@ -1,10 +1,7 @@
 
 const modal = require('../plugins/modal/modal')
-
 const ProntuarioRepositorio = new (require('../prontuario/ProntuarioRepositorio'))
-
 const repositorio = new (require('./SessaoRepositorio'))
-
 const DateHelper = require('../plugins/date/DateHelper')
 
 /**
@@ -27,7 +24,7 @@ const ID_FORMULARIO_HTML = '#formulario-sessao'
 const MENSAGENS = {
     zero_registros: 'Nenhum registro encontrado',
     sucesso_gravacao: 'Sessão gravada com sucesso!',
-    sucesso_remocao: 'Sessão removida com sucesso!',
+    sucesso_remocao: 'Sessão desmarcada com sucesso!',
     erro_generico: 'Houve um erro ao realizar a operação. Tente novamente.',
 }
 
@@ -108,6 +105,9 @@ const vincularAcoes = () => {
 
   // Limpeza dos inputs ao cancelar edição
   document.querySelector(`${ID_FORMULARIO_HTML} .cancel-edit`).addEventListener('click', limparCampos)
+
+  // Desmarcar sessão
+  document.querySelector(`${ID_FORMULARIO_HTML} [name="desmarcar-sessao"]`).addEventListener('click', desmarcarSessao)
 }
 
 /**
@@ -158,14 +158,45 @@ const save = async (event) => {
 
   alert(message)
 
-  // Fechar o modal
-  document.querySelector(`${MODAL.ID_SELETOR} .close`).click()
+  reinicializarCalendario()
+}
 
-  // Limpar o modal
-  limparCampos()
+/**
+ * Desmarca a sessão existente e dá um feedback na tela
+ * @param {Event} event Evento que ativou essa função
+ * @returns {undefined}
+ */
+const desmarcarSessao = async (event) => {
+  event.preventDefault()
 
-  // Re-inicializar
-  inicializar()
+  const idSessao = document.querySelector(`${ID_FORMULARIO_HTML} [name="id"]`).value
+
+  const foiDesmarcada = await repositorio.delete(idSessao)
+  
+  if (!foiDesmarcada) {
+      alert(MENSAGENS.erro_generico)
+      return
+  }
+
+  alert(MENSAGENS.sucesso_remocao)
+
+  reinicializarCalendario()
+}
+
+/**
+ * Fecha qualquer modal aberto, limpa seus campos e reinicializa o calendário,
+ * carregando os dados atualizados
+ * @return {undefined}
+ */
+const reinicializarCalendario = () => {
+    // Fechar o modal
+    document.querySelector(`${MODAL.ID_SELETOR} .close`).click()
+
+    // Limpar o modal
+    limparCampos()
+  
+    // Re-inicializar
+    inicializar()
 }
 
 /**
@@ -219,8 +250,11 @@ const preencherCampos = ({
   if (status) {
     document.querySelector(`${ID_FORMULARIO_HTML} [name="status"]`).value = status
   }
+
+  document.querySelector(`${ID_FORMULARIO_HTML} [name="desmarcar-sessao"]`).classList.add('d-none')
   if (id) {
     document.querySelector(`${ID_FORMULARIO_HTML} [name="id"]`).value = id
+    document.querySelector(`${ID_FORMULARIO_HTML} [name="desmarcar-sessao"]`).classList.remove('d-none')
   }
 
   // Botões padrão
@@ -256,10 +290,19 @@ const inicializarCalendario = () => {
       hour12: false
     },
     scrollTime: horaAtual,
+    /**
+     * Listener disparado ao clicar em um evento do calendário
+     * Abre o modal preenchido com os dados do evento
+     * @param {object} info Dados do evento
+     */
     eventClick: (info) => {
       preencherCampos(info.event.extendedProps)
       modal.openModal(MODAL.ID_BOTAO)
     },
+    /**
+     * Recupera data e hora do ponto clicado, preenchendo o modal com esses dados
+     * @param {object} info Dados e data e hora do ponto clicado
+     */
     dateClick: (info) => {
       const dataHora = new DateHelper(info.dateStr)
       const campos = {
