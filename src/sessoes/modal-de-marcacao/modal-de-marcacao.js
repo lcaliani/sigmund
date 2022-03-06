@@ -7,8 +7,8 @@ const repositorio = new (require('../SessaoRepositorio'))
 /**
  * Eventos customizados disponíveis:
  * 
- * salvar_sessao: Disparado ao tentar salvar um registro de sessao
- * desmarcar_sessao: Disparado ao tentar inativar um registro de sessao
+ * - salvar_sessao: Disparado ao tentar salvar um registro de sessao
+ * - desmarcar_sessao: Disparado ao tentar inativar um registro de sessao
  */
 
 /**
