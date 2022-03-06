@@ -12,14 +12,27 @@
 
     <script src="./lista-de-sessoes.js"></script>
 
-
   </head>
   <body>
     <div class="container">
       <h1>Lista de sessoes de: 
           <span id="titulo-nome-paciente"></span>
       </h1>
+
+      <table class="u-full-width" name="tabela-lista-sessoes">
+        <thead>
+          <tr>
+            <th>Data hora inicio (formatar)</th>
+            <th>Data hora fim (formatar)</th>
+            <th>Notas</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="conteudo-lista-sessoes">
+        </tbody>
+      </table>
     </div>
 
+    <div w3-include-html="../modal-de-marcacao/modal-de-marcacao.html"></div>
   </body>
 </html>
