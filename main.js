@@ -22,7 +22,7 @@ const criarJanelaPrincipal = () => {
   janelaPrincipal.loadFile('./src/inicio/index.html')
 
   // @todo: Deixar dinâmico somente para dev
-  janelaPrincipal.webContents.openDevTools()
+  // janelaPrincipal.webContents.openDevTools()
 
   console.log('A janela da aplicação foi criada!')
 
