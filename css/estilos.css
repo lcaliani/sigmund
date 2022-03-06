@@ -1,5 +1,12 @@
+:root {
+  --white: #fff;
+  --warning: #ffc107;
+  --danger: #e97979;
+  --danger-hover: #ef5c5c;
+}
+
 .d-none {
-  display: none;
+  display: none !important;
 }
 
 button:disabled,
@@ -31,13 +38,29 @@ tr[role="presentation"].fc-scrollgrid-section-body table {
 
 /* ### Estilos básicos para complementar o skeleton.css */
 .button-danger {
-  background-color: #e97979;
-  color: #ffffff;
-  border-color: #e97979;
+  background-color: var(--danger);
+  color: var(--white);
+  border-color: var(--danger);
 }
 
 .button-danger:hover {
-  background-color:   #ef5c5c;
-  color: #ffffff;
-  border-color:   #ef5c5c;
+  background-color:   var(--danger-hover);
+  color: var(--white);
+  border-color:   var(--danger-hover);
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25em 0.3em;
+  font-size: 85%;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+}
+
+.badge-warning {
+  color: var(--white);
+  background-color: var(--warning);
 }
