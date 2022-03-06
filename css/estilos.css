@@ -2,6 +2,7 @@
   --white: #fff;
   --warning: #ffc107;
   --danger: #e97979;
+  --info: #1EAEDB;
   --danger-hover: #ef5c5c;
 }
 
@@ -67,4 +68,16 @@ tr[role="presentation"].fc-scrollgrid-section-body table {
 
 .row-selected {
   border: 2px dashed var(--warning)
+}
+
+.link-warning {
+  color: var(--warning)
+}
+
+.link-danger {
+  color: var(--danger)
+}
+
+.link-info {
+  color: var(--info)
 }

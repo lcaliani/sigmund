@@ -3,6 +3,8 @@ const prontuarioPerguntas = require('./respostas_anamnese/respostas_anamnese')
 const ProntuarioRepositorio = require('./ProntuarioRepositorio')
 const repositorio = new ProntuarioRepositorio()
 
+let ipc = require('electron').ipcRenderer;
+
 /**
  * Seletor que identifica a tabela de listagem de dados desse contexto
  */
@@ -62,7 +64,8 @@ function montarHtmlTabela(registros) {
             data-status="${registro.status}"`
         
         let actions = `<a href="" class="link-warning" name="edit">Ver/Editar</a> |` 
-        actions += `<a href="" class="link-danger" name="delete">Excluir</a>`
+        actions += ` <a href="" class="link-danger" name="delete">Excluir</a> |` 
+        actions += ` <a href="" class="link-info" name="ver-sessoes">Sessões</a>`
 
         tableHtml += `<tr>
             <td>${registro.nome}</td>
@@ -93,19 +96,14 @@ function montarHtmlTabela(registros) {
 function vincularAcoes() {
     let edit = document.querySelectorAll(`[name="${NOME_TABELA_HTML}"] [name="edit"]`)
     let remove = document.querySelectorAll(`[name="${NOME_TABELA_HTML}"] [name="delete"]`)
+    let verSessoes = document.querySelectorAll(`[name="${NOME_TABELA_HTML}"] [name="ver-sessoes"]`)
     
     const counter = edit.length
 
     for (let i = 0; i < counter; i++) {
-        edit[i].addEventListener('click', (e) => {
-            e.preventDefault()
-
-            preencherCampos(
-                e.currentTarget.parentNode.dataset,
-                e.currentTarget.parentNode.parentNode
-            )
-        })
+        edit[i].addEventListener('click', selecionaItem)
         remove[i].addEventListener('click', deleteItem)
+        verSessoes[i].addEventListener('click', abreTelaDeListaDeSessoes)
     }
 
     /**
@@ -210,6 +208,36 @@ async function deleteItem(removeButtonEvent) {
     alert(message)
 
     inicializar()
+}
+
+/**
+ * Preenche os dados do paciente ao clicar em editar
+ * @param {object} eventoBotaoEditar 
+ */
+function selecionaItem(eventoBotaoEditar) {
+    eventoBotaoEditar.preventDefault()
+
+    limparCampos()
+
+    preencherCampos(
+        eventoBotaoEditar.currentTarget.parentNode.dataset,
+        eventoBotaoEditar.currentTarget.parentNode.parentNode
+    )
+}
+
+function abreTelaDeListaDeSessoes(eventoBotaoSessoes) {
+    eventoBotaoSessoes.preventDefault()
+
+    const dados = eventoBotaoSessoes.currentTarget.parentNode.dataset
+    ipc.send(
+        'abrir_janela_lista_de_sessoes',
+        {
+          'dados': {
+            id_paciente: dados.id,
+            nome_paciente: dados.nome,
+          }
+        }
+    )
 }
 
 /**
