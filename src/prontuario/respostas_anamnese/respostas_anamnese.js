@@ -1,5 +1,3 @@
-const prontuarioDoPaciente = require('../prontuario')
-
 const RoteiroDeAnamneseRepositorio = require('../../roteiro_de_anamnese/RoteiroDeAnamneseRepositorio')
 const perguntasRepositorio = new RoteiroDeAnamneseRepositorio()
 
