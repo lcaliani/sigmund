@@ -170,10 +170,14 @@ const prepararJanelaDeListagemDeSessoes = (janelaPai) => {
     /** @windows @mac only */
     janela.movable = false
 
-    janela.loadFile('./src/sessoes/lista-de-sessoes.html')
+    janela.loadFile('./src/sessoes/listagem/lista-de-sessoes.html')
     janela.webContents.openDevTools()
     janela.show()
     janela.setMenu(new Menu());
+
+    janela.webContents.on('did-finish-load', () => {
+      janela.webContents.send('dados_enviados_do_paciente', dadosRecebidos.dados)
+    })
   })
 }
 
