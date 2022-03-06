@@ -21,13 +21,9 @@ const criarJanelaPrincipal = () => {
 
   janelaPrincipal.loadFile('./src/inicio/index.html')
 
-  // @todo: Deixar dinâmico somente para dev
-  janelaPrincipal.webContents.openDevTools()
-
-  console.log('A janela da aplicação foi criada!')
-
   prepararJanelaDeProntuarios(janelaPrincipal)
   prepararJanelaDeSessoes(janelaPrincipal)
+  prepararJanelaDeListagemDeSessoes(janelaPrincipal)
 
   // Setando menu na tela inicial
   const menu = new Menu()
@@ -55,8 +51,6 @@ const criarJanelaPrincipal = () => {
  **/
 const prepararJanelaDeProntuarios = (janelaPai) => {
   ipcMain.on('abrir_janela_prontuarios_e_anamnese', (evento, dados) => {
-    console.log('Abrindo janela de Prontuários e anamnese!')
-
     const opcoes = {
         parent: janelaPai,
         modal: true,
@@ -77,13 +71,7 @@ const prepararJanelaDeProntuarios = (janelaPai) => {
     janelaProntuarios.movable = false
 
     janelaProntuarios.loadFile('./src/prontuario/prontuario.html')
-
-    janelaProntuarios.webContents.openDevTools()
-    
-    // janelaPai.webContents.on('did-finish-load', () => {
-    //     janelaPai.webContents.openDevTools()
-    //     janelaPai.webContents.send('customerWasChosen', customerData)
-    // })
+    // janelaProntuarios.webContents.openDevTools()
     janelaProntuarios.show()
     janelaProntuarios.setMenu(new Menu());
   })
@@ -96,8 +84,7 @@ const prepararJanelaDeProntuarios = (janelaPai) => {
  * @return {undefined}
  **/
 const prepararJanelaDeSessoes = (janelaPai) => {
-    ipcMain.on('abrir_janela_sessoes', (evento, dados) => {
-    console.log('Abrindo janela de sessões!')
+  ipcMain.on('abrir_janela_sessoes', (evento, dados) => {
 
     const opcoes = {
         parent: janelaPai,
@@ -119,13 +106,7 @@ const prepararJanelaDeSessoes = (janelaPai) => {
     janelaDeSessoes.movable = false
 
     janelaDeSessoes.loadFile('./src/sessoes/sessoes.html')
-
     janelaDeSessoes.webContents.openDevTools()
-    
-    // janelaPai.webContents.on('did-finish-load', () => {
-    //     janelaPai.webContents.openDevTools()
-    //     janelaPai.webContents.send('customerWasChosen', customerData)
-    // })
     janelaDeSessoes.show()
     janelaDeSessoes.setMenu(new Menu());
   })
@@ -137,9 +118,6 @@ const prepararJanelaDeSessoes = (janelaPai) => {
  * @return {undefined}
  **/
 const prepararJanelaDeRoteiroDeAnamnese = (janelaPai) => {
-
-    console.log('Abrindo janela de Roteiro de anamnese!')
-
     const opcoes = {
         parent: janelaPai,
         modal: true,
@@ -160,15 +138,47 @@ const prepararJanelaDeRoteiroDeAnamnese = (janelaPai) => {
     janelaDeRoteiro.movable = false
 
     janelaDeRoteiro.loadFile('./src/roteiro_de_anamnese/roteiro-de-anamnese.html')
-
     janelaDeRoteiro.webContents.openDevTools()
-
-    // janelaPai.webContents.on('did-finish-load', () => {
-    //     janelaPai.webContents.openDevTools()
-    //     janelaPai.webContents.send('customerWasChosen', customerData)
-    // })
     janelaDeRoteiro.show()
     janelaDeRoteiro.setMenu(new Menu());
+}
+
+/**
+ * "Instala" o event listener que fica ouvindo o evento "abrir_janela_lista_de_sessoes"
+ * e a partir dele abre a janela de listagem de sessoes
+ * @param {string} janelaPai
+ * @return {undefined}
+ **/
+const prepararJanelaDeListagemDeSessoes = (janelaPai) => {
+  ipcMain.on('abrir_janela_lista_de_sessoes', (evento, dadosRecebidos) => {
+    const opcoes = {
+        parent: janelaPai,
+        modal: true,
+        center: true,
+        title: `Listagem de sessoes de ${dadosRecebidos.dados.nome_paciente}`,
+        width: 1280,
+        height: 720,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+        },
+        resizable: false,
+    }
+
+    let janela = new BrowserWindow(opcoes)
+
+    /** @windows @mac only */
+    janela.movable = false
+
+    janela.loadFile('./src/sessoes/listagem/lista-de-sessoes.html')
+    janela.webContents.openDevTools()
+    janela.show()
+    janela.setMenu(new Menu());
+
+    janela.webContents.on('did-finish-load', () => {
+      janela.webContents.send('dados_enviados_do_paciente', dadosRecebidos.dados)
+    })
+  })
 }
 
 

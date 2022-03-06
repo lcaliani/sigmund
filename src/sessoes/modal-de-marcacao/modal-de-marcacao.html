@@ -1,0 +1,55 @@
+<link href="../plugins/modal/modal.css" rel='stylesheet' />
+<script src="./modal-de-marcacao.js"></script>
+
+<div>
+    <button id="sessoes-adicionar-marcacao">Nova marcação</button>
+
+    <div id="modal-marcar-sessao" class="modal">
+
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Marcação de sessão</h2>
+
+        <form id="formulario-sessao" class="form formulario-sessao">
+        <span class="badge bg-warning text-dark edit-status d-none">Editando dados</span>
+
+        <div class="row">
+            <div class="two columns">
+            <label for="id_paciente">Paciente:</label>
+            </div>
+            <div class="two columns">
+            <select name="id_paciente" id="id_paciente">
+            </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="four columns">
+            <label for="">De:</label>
+            <input required name="data_inicio" id="" type="date"></input>
+            <input required name="hora_inicio" id="" type="time"></input>
+            </div>
+            <div class="four columns">
+            <label for="">Até:</label>
+            <input required name="data_fim" id="" type="date"></input>
+            <input required name="hora_fim" id="" type="time"></input>
+            </div>
+        </div>
+
+        <label for="descricao">Notas:</label>
+        <textarea name="descricao" id="" class="u-full-width" cols="30" rows="30" value="" placeholder="Notas sobre a sessão podem ser registradas aqui"></textarea>
+
+        <input type="hidden" name="id">
+
+        <input type="hidden" name="id_paciente">
+
+        <input type="hidden" name="status" value="1">
+
+        <button type="submit" class="button-primary">Salvar</button>
+        <button class="cancel-edit d-none">Cancelar</button>
+        <button class="button-danger u-pull-right" name="desmarcar-sessao">Desmarcar sessão</button>
+        </form>
+    </div>
+
+    </div>
+</div>

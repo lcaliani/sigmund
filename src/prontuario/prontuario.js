@@ -3,6 +3,8 @@ const prontuarioPerguntas = require('./respostas_anamnese/respostas_anamnese')
 const ProntuarioRepositorio = require('./ProntuarioRepositorio')
 const repositorio = new ProntuarioRepositorio()
 
+let ipc = require('electron').ipcRenderer;
+
 /**
  * Seletor que identifica a tabela de listagem de dados desse contexto
  */
@@ -62,7 +64,8 @@ function montarHtmlTabela(registros) {
             data-status="${registro.status}"`
         
         let actions = `<a href="" class="link-warning" name="edit">Ver/Editar</a> |` 
-        actions += `<a href="" class="link-danger" name="delete">Excluir</a>`
+        actions += ` <a href="" class="link-danger" name="delete">Excluir</a> |` 
+        actions += ` <a href="" class="link-info" name="ver-sessoes">Sessões</a>`
 
         tableHtml += `<tr>
             <td>${registro.nome}</td>
@@ -93,15 +96,14 @@ function montarHtmlTabela(registros) {
 function vincularAcoes() {
     let edit = document.querySelectorAll(`[name="${NOME_TABELA_HTML}"] [name="edit"]`)
     let remove = document.querySelectorAll(`[name="${NOME_TABELA_HTML}"] [name="delete"]`)
+    let verSessoes = document.querySelectorAll(`[name="${NOME_TABELA_HTML}"] [name="ver-sessoes"]`)
     
     const counter = edit.length
 
     for (let i = 0; i < counter; i++) {
-        edit[i].addEventListener('click', (e) => {
-            e.preventDefault()
-            preencherCampos(e.currentTarget.parentNode.dataset)
-        })
+        edit[i].addEventListener('click', selecionaItem)
         remove[i].addEventListener('click', deleteItem)
+        verSessoes[i].addEventListener('click', abreTelaDeListaDeSessoes)
     }
 
     /**
@@ -124,9 +126,10 @@ function vincularAcoes() {
 /**
  * Preenche os inputs com os valores recebidos
  * @param {object} memberValues 
+ * @param {object} linhaDaTabela Elemento html representando a <tr> onde fica a ação clicada
  * @return {undefined}
  */
-function preencherCampos(valoresDoBanco = {}) {
+function preencherCampos(valoresDoBanco = {}, linhaDaTabela) {
     let valoresFormatados = {}
     for (let [chave, valor] of Object.entries(valoresDoBanco)) {
         valoresFormatados[chave] = (valor == 'null' || !valor) ? '' : valor;
@@ -147,6 +150,12 @@ function preencherCampos(valoresDoBanco = {}) {
     // Botões padrão
     document.querySelector(`${ID_FORMULARIO_HTML} .edit-status`).classList.remove('d-none')
     document.querySelector(`${ID_FORMULARIO_HTML} .cancel-edit`).classList.remove('d-none')
+
+    // Badge de edição
+    document.querySelector('#paciente-atual-sendo-editado').innerHTML = nome
+
+    // Seleção na tabela
+    linhaDaTabela.classList.add('row-selected')
 
     prontuarioPerguntas.preencherCampos(id)
 }
@@ -202,6 +211,36 @@ async function deleteItem(removeButtonEvent) {
 }
 
 /**
+ * Preenche os dados do paciente ao clicar em editar
+ * @param {object} eventoBotaoEditar 
+ */
+function selecionaItem(eventoBotaoEditar) {
+    eventoBotaoEditar.preventDefault()
+
+    limparCampos()
+
+    preencherCampos(
+        eventoBotaoEditar.currentTarget.parentNode.dataset,
+        eventoBotaoEditar.currentTarget.parentNode.parentNode
+    )
+}
+
+function abreTelaDeListaDeSessoes(eventoBotaoSessoes) {
+    eventoBotaoSessoes.preventDefault()
+
+    const dados = eventoBotaoSessoes.currentTarget.parentNode.dataset
+    ipc.send(
+        'abrir_janela_lista_de_sessoes',
+        {
+          'dados': {
+            id_paciente: dados.id,
+            nome_paciente: dados.nome,
+          }
+        }
+    )
+}
+
+/**
  * Limpa os inputs e oculta o botão de "cancelar edição"
  * 
  */
@@ -224,6 +263,11 @@ function limparCampos(event) {
     // Botões padrão
     document.querySelector(`${ID_FORMULARIO_HTML} .cancel-edit`).classList.add('d-none')
     document.querySelector(`${ID_FORMULARIO_HTML} .edit-status`).classList.add('d-none')
+
+    // Seleção na tabela
+    document.querySelectorAll('tr').forEach((linhaDaTabela) => {
+        linhaDaTabela.classList.remove('row-selected')
+    })
 
     // Resposta
     prontuarioPerguntas.limparCampos(event)
