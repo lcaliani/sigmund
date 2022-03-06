@@ -5,6 +5,13 @@ const ProntuarioRepositorio = new (require('../../prontuario/ProntuarioRepositor
 const repositorio = new (require('../SessaoRepositorio'))
 
 /**
+ * Eventos customizados disponíveis:
+ * 
+ * salvar_sessao: Disparado ao tentar salvar um registro de sessao
+ * desmarcar_sessao: Disparado ao tentar inativar um registro de sessao
+ */
+
+/**
  * Modal de marcação de sessão
  */
 const MODAL = {
@@ -111,13 +118,29 @@ const save = async (event) => {
 
   let message = MENSAGENS.sucesso_gravacao
   
+  /**
+   * Status da operação de gravação. Default: true (sucesso)
+   */
+  const detalheEvento = {
+    detail: {
+      status: true
+    }
+  }
+
   if (!wasSaved) {
       message = MENSAGENS.erro_generico
       alert(message)
+
+      detalheEvento.detail.status = false
+      let evento = new CustomEvent('salvar_sessao', detalheEvento);
+      document.dispatchEvent(evento);
       return
   }
 
   alert(message)
+
+  let evento = new CustomEvent('salvar_sessao', detalheEvento);
+  document.dispatchEvent(evento);
 
   reinicializarCalendario()
 }
@@ -134,12 +157,27 @@ const desmarcarSessao = async (event) => {
 
   const foiDesmarcada = await repositorio.delete(idSessao)
   
+  /**
+   * Status da operação de gravação. Default: true (sucesso)
+   */
+    const detalheEvento = {
+    detail: {
+      status: true
+    }
+  }
+
   if (!foiDesmarcada) {
       alert(MENSAGENS.erro_generico)
+      detalheEvento.detail.status = false
+      let evento = new CustomEvent('desmarcar_sessao', detalheEvento);
+      document.dispatchEvent(evento);
       return
   }
 
   alert(MENSAGENS.sucesso_remocao)
+
+  let evento = new CustomEvent('desmarcar_sessao', detalheEvento);
+  document.dispatchEvent(evento);
 
   reinicializarCalendario()
 }

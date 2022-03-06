@@ -16,6 +16,11 @@ async function inicializar() {
   w3.includeHTML(async () => {
     inicializarCalendario()
     modalNew.inicializar()
+
+    // Comunicação através de eventos com o plugin de modal
+    // Após salvar ou desmarcar, reinicializa o calendário atualizado
+    document.addEventListener('salvar_sessao', inicializar)
+    document.addEventListener('desmarcar_sessao', inicializar)
   })
 }
 
