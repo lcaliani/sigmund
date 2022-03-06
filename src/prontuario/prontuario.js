@@ -99,7 +99,11 @@ function vincularAcoes() {
     for (let i = 0; i < counter; i++) {
         edit[i].addEventListener('click', (e) => {
             e.preventDefault()
-            preencherCampos(e.currentTarget.parentNode.dataset)
+
+            preencherCampos(
+                e.currentTarget.parentNode.dataset,
+                e.currentTarget.parentNode.parentNode
+            )
         })
         remove[i].addEventListener('click', deleteItem)
     }
@@ -124,9 +128,10 @@ function vincularAcoes() {
 /**
  * Preenche os inputs com os valores recebidos
  * @param {object} memberValues 
+ * @param {object} linhaDaTabela Elemento html representando a <tr> onde fica a ação clicada
  * @return {undefined}
  */
-function preencherCampos(valoresDoBanco = {}) {
+function preencherCampos(valoresDoBanco = {}, linhaDaTabela) {
     let valoresFormatados = {}
     for (let [chave, valor] of Object.entries(valoresDoBanco)) {
         valoresFormatados[chave] = (valor == 'null' || !valor) ? '' : valor;
@@ -147,6 +152,12 @@ function preencherCampos(valoresDoBanco = {}) {
     // Botões padrão
     document.querySelector(`${ID_FORMULARIO_HTML} .edit-status`).classList.remove('d-none')
     document.querySelector(`${ID_FORMULARIO_HTML} .cancel-edit`).classList.remove('d-none')
+
+    // Badge de edição
+    document.querySelector('#paciente-atual-sendo-editado').innerHTML = nome
+
+    // Seleção na tabela
+    linhaDaTabela.classList.add('row-selected')
 
     prontuarioPerguntas.preencherCampos(id)
 }
@@ -224,6 +235,11 @@ function limparCampos(event) {
     // Botões padrão
     document.querySelector(`${ID_FORMULARIO_HTML} .cancel-edit`).classList.add('d-none')
     document.querySelector(`${ID_FORMULARIO_HTML} .edit-status`).classList.add('d-none')
+
+    // Seleção na tabela
+    document.querySelectorAll('tr').forEach((linhaDaTabela) => {
+        linhaDaTabela.classList.remove('row-selected')
+    })
 
     // Resposta
     prontuarioPerguntas.limparCampos(event)

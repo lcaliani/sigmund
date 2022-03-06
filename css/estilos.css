@@ -64,3 +64,7 @@ tr[role="presentation"].fc-scrollgrid-section-body table {
   color: var(--white);
   background-color: var(--warning);
 }
+
+.row-selected {
+  border: 2px dashed var(--warning)
+}
