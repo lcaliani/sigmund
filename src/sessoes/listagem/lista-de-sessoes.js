@@ -16,15 +16,16 @@ let ipc = require('electron').ipcRenderer;
 const NOME_TABELA_HTML = 'tabela-lista-sessoes'
 
 /**
- * Seletor que identifica o formulário de manipulação de dados desse contexto
+ * Seletor que identifica o elemento com o título da página
  */
-const ID_FORMULARIO_HTML = '#formulario-dados-do-paciente'
+const ID_TITULO_DA_PAGINA = '#titulo-nome-paciente'
 
 /**
  * Mensagens de feedback
  */
 const MENSAGENS = {
     zero_registros: 'Esse paciente não possui nenhuma sessão marcada.',
+    notas_vazias: 'Nada consta.',
     sucesso_gravacao: 'Sessão gravado com sucesso!',
     sucesso_remocao: 'Sessão desmarcada com sucesso!',
     erro_generico: 'Houve um erro ao realizar a operação. Tente novamente.',
@@ -34,10 +35,11 @@ const MENSAGENS = {
  * Carrega na tela os dados cadastrados na tabela
  * @return {undefined}
  */
-async function inicializar(paciente_id) {
+async function inicializar(paciente) {
   w3.includeHTML(async () => {
-    let registros = await repositorio.todasComPaciente('sessao.data_hora_inicio DESC', paciente_id)
+    let registros = await repositorio.todasComPaciente('sessao.data_hora_inicio DESC', paciente.paciente_id)
     document.querySelector(`[name="${NOME_TABELA_HTML}"] tbody`).innerHTML = montarHtmlTabela(registros)
+    document.querySelector(ID_TITULO_DA_PAGINA).innerText = paciente.nome_paciente
 
     vincularAcoes()
 
@@ -65,11 +67,12 @@ function montarHtmlTabela(registros) {
     }
 
     registros.forEach((registro) => {
+        const possuiDescricao = registro.descricao !== null
         // Cada campo possui seu dataset
         const datasets = `data-id="${registro.id}"
             data-id_paciente="${registro.id_paciente}"
             data-nome_paciente="${registro.nome_paciente}"
-            data-descricao="${registro.descricao}"
+            data-descricao="${registro.descricao || ''}"
             data-data_hora_inicio="${registro.data_hora_inicio}"
             data-data_hora_fim="${registro.data_hora_fim}"
             data-data_cadastro="${registro.data_cadastro}"
@@ -78,10 +81,16 @@ function montarHtmlTabela(registros) {
         let actions = `<a href="" class="link-warning" name="edit">Ver/Editar</a> |` 
         actions += ` <a href="" class="link-danger" name="delete">Desmarcar</a> |` 
 
+        const dataHoraInicio = new DateHelper(registro.data_hora_inicio)
+        const dataHoraFim = new DateHelper(registro.data_hora_fim)
+
         tableHtml += `<tr>
-            <td>${registro.data_hora_inicio}</td>
-            <td>${registro.data_hora_fim}</td>
-            <td>${registro.descricao}</td>
+            <td>${dataHoraInicio.dateBR}</td>
+            <td>${dataHoraInicio.time}</td>
+            <td>${dataHoraFim.time}</td>
+            <td class="${possuiDescricao ? '' : 'secondary-text'}">
+              ${possuiDescricao ? registro.descricao : MENSAGENS.notas_vazias}
+            </td>
             <td ${datasets}>${actions}</td>
         </tr>`
     })
@@ -156,5 +165,5 @@ const deleteItem = async (removeButtonEvent) => {
 
 ipcRenderer.on('dados_enviados_do_paciente', (evento, dados) => {
   // Ações
-  inicializar(dados.id_paciente)
+  inicializar(dados)
 })
