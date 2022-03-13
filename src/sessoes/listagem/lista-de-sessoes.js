@@ -35,9 +35,10 @@ const MENSAGENS = {
  * Carrega na tela os dados cadastrados na tabela
  * @return {undefined}
  */
-async function inicializar(paciente) {
+async function inicializar() {
   w3.includeHTML(async () => {
-    let registros = await repositorio.todasComPaciente('sessao.data_hora_inicio DESC', paciente.paciente_id)
+    const paciente = JSON.parse(sessionStorage.getItem('dados_enviados_do_paciente'))
+    let registros = await repositorio.todasComPaciente('sessao.data_hora_inicio DESC', paciente.id_paciente)
     document.querySelector(`[name="${NOME_TABELA_HTML}"] tbody`).innerHTML = montarHtmlTabela(registros)
     document.querySelector(ID_TITULO_DA_PAGINA).innerText = paciente.nome_paciente
 
@@ -78,8 +79,8 @@ function montarHtmlTabela(registros) {
             data-data_cadastro="${registro.data_cadastro}"
             data-status="${registro.status}"`
         
-        let actions = `<a href="" class="link-warning" name="edit">Ver/Editar</a> |` 
-        actions += ` <a href="" class="link-danger" name="delete">Desmarcar</a> |` 
+        let actions = `<a href="" class="link-warning" title="Ver ou editar os dados da sessão" name="edit">Ver/Editar</a> |` 
+        actions += ` <a href="" class="link-danger" title="Desmarcar a sessão" name="delete">Desmarcar</a>`
 
         const dataHoraInicio = new DateHelper(registro.data_hora_inicio)
         const dataHoraFim = new DateHelper(registro.data_hora_fim)
@@ -128,7 +129,7 @@ const selecionaItem = (eventoBotaoEditar) => {
   const dataHora = {
     data_inicio: dataHoraInicio.date,
     hora_inicio: dataHoraInicio.time,
-    data_fim: dataHoraFim.date,
+    data_fim: dataHoraInicio.date,
     hora_fim: dataHoraFim.time,
   }
 
@@ -165,5 +166,6 @@ const deleteItem = async (removeButtonEvent) => {
 
 ipcRenderer.on('dados_enviados_do_paciente', (evento, dados) => {
   // Ações
-  inicializar(dados)
+  sessionStorage.setItem('dados_enviados_do_paciente', JSON.stringify(dados))
+  inicializar()
 })
