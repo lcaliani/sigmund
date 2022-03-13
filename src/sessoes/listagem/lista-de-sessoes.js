@@ -5,7 +5,8 @@ const w3 = require('../../plugins/w3/w3')
 const SessaoRepositorio = require('../SessaoRepositorio')
 const repositorio = new SessaoRepositorio()
 
-const modalNew = require('../modal-de-marcacao/modal-de-marcacao')
+const modalNew = require('../modal-de-marcacao/modal-de-marcacao');
+const DateHelper = require('../../plugins/date/DateHelper');
 
 let ipc = require('electron').ipcRenderer;
 
@@ -100,9 +101,8 @@ function vincularAcoes() {
 
     for (let i = 0; i < counter; i++) {
         edit[i].addEventListener('click', selecionaItem)
-        // remove[i].addEventListener('click', deleteItem)
+        remove[i].addEventListener('click', deleteItem)
     }
-
 }
 
 /**
@@ -112,14 +112,47 @@ function vincularAcoes() {
 const selecionaItem = (eventoBotaoEditar) => {
   eventoBotaoEditar.preventDefault()
 
-  console.log(eventoBotaoEditar.currentTarget.parentNode.dataset)
-  // modalNew.preencherCampos(eventoBotaoEditar.currentTarget.parentNode.dataset)
-  // modalNew.openModal()
+  const dataset = eventoBotaoEditar.currentTarget.parentNode.dataset
+
+  const dataHoraInicio = new DateHelper(dataset.data_hora_inicio)
+  const dataHoraFim = new DateHelper(dataset.data_hora_fim)
+  const dataHora = {
+    data_inicio: dataHoraInicio.date,
+    hora_inicio: dataHoraInicio.time,
+    data_fim: dataHoraFim.date,
+    hora_fim: dataHoraFim.time,
+  }
+
+  let campos = {
+    ...dataset,
+    ...dataHora,
+  }
+
+  modalNew.preencherCampos(campos)
+  modalNew.openModal()
 }
 
+/**
+ * Remove o registro e envia uma mensagem
+ * @param {object} removeButtonEvent Evento do botão delete que contem o data attribute "id"
+ * @return {undefined}
+ */
+const deleteItem = async (removeButtonEvent) => {
+  removeButtonEvent.preventDefault()
 
+  const wasRemoved = await repositorio.delete(removeButtonEvent.currentTarget.parentNode.dataset.id)
+  let message = MENSAGENS.sucesso_remocao
+  
+  if (!wasRemoved) {
+      message = MENSAGENS.erro_generico
+      alert(message)
+      return
+  }
 
+  alert(message)
 
+  inicializar()
+}
 
 ipcRenderer.on('dados_enviados_do_paciente', (evento, dados) => {
   // Ações

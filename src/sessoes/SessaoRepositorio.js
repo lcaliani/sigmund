@@ -50,10 +50,10 @@ class SessaoRepositorio extends Repositorio {
      * @returns {Promise<array<object>>}
      */
     async todasComPaciente(orderBy = 'nome', idPaciente = 0) {
-        let result = []
+        idPaciente = parseInt(idPaciente)
 
         let whereIdPaciente = ''
-        const idPacienteValido = idPaciente !== undefined && Number.isInteger(idPaciente) && idPaciente != 0
+        const idPacienteValido = idPaciente !== undefined && !Number.isNaN(idPaciente) && idPaciente != 0
         if (idPacienteValido) {
             whereIdPaciente = `AND ${this.campos.id_paciente} = ${idPaciente}`
         }
@@ -68,6 +68,8 @@ class SessaoRepositorio extends Repositorio {
                 AND ${PacienteRepositorio.TABLE}.${PacienteRepositorio.campos.status} = 1
                 ${whereIdPaciente}
             ORDER BY ${orderBy}`
+
+        let result = []
         return new Promise((resolve, reject) => {
             this.con.all(instrucao, [], (error, rows) => {
                 if (error) {

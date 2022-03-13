@@ -17,7 +17,6 @@ const repositorio = new (require('../SessaoRepositorio'))
 const MODAL = {
   ID_SELETOR: '#modal-marcar-sessao',
   ID: 'modal-marcar-sessao',
-  ID_BOTAO_SELETOR: '#sessoes-adicionar-marcacao',
   ID_BOTAO: 'sessoes-adicionar-marcacao',
 }
 /**
@@ -37,10 +36,11 @@ const MENSAGENS = {
 
 /**
  * Carrega na tela os dados cadastrados na tabela
+ * @param {string} botaoInicializadorDoModal Id do botão inicializador do modal
  * @return {undefined}
  */
-async function inicializar() {
-    modal.setUpModal(MODAL.ID, MODAL.ID_BOTAO)
+async function inicializar(botaoInicializadorDoModal) {
+    modal.setUpModal(MODAL.ID, botaoInicializadorDoModal || MODAL.ID_BOTAO)
     document.querySelector(`${ID_FORMULARIO_HTML} select[name="id_paciente"]`).innerHTML = await montarSelectHtml()
     vincularAcoes()
 }
