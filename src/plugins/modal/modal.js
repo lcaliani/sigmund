@@ -32,7 +32,7 @@ const setUpModal = (modalId, triggerButtonId) => {
         // Ao clicar fora do modal, fecha
         window.onclick = (event) => {
             if (event.target == modal) {
-                modal.style.display = "none";
+                span.click()
             }
         }
     } catch (erro) {

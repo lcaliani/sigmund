@@ -73,6 +73,8 @@ const vincularAcoes = () => {
 
   // Limpeza dos inputs ao cancelar edição
   document.querySelector(`${ID_FORMULARIO_HTML} .cancel-edit`).addEventListener('click', limparCampos)
+  document.querySelector(`span.close`).addEventListener('click', limparCampos)
+
 
   // Desmarcar sessão
   document.querySelector(`${ID_FORMULARIO_HTML} [name="desmarcar-sessao"]`).addEventListener('click', desmarcarSessao)
@@ -210,6 +212,9 @@ const limparCampos = (event) => {
   document.querySelector(`${ID_FORMULARIO_HTML} input[name="status"]`).value = 1
 
   modal.closeModal(MODAL.ID)
+
+  document.querySelector(`${ID_FORMULARIO_HTML} .edit-status`).classList.add('d-none')
+
 }
 
 /**
@@ -226,7 +231,7 @@ const preencherCampos = ({
   descricao,
   status,
   id
-} = valores) => {
+} = valores, editando = true) => {
   // Campos dos dados
   if (id_paciente) {
     document.querySelector(`${ID_FORMULARIO_HTML} [name="id_paciente"]`).value = id_paciente
@@ -257,7 +262,10 @@ const preencherCampos = ({
   }
 
   // Botões padrão
-  document.querySelector(`${ID_FORMULARIO_HTML} .edit-status`).classList.remove('d-none')
+  if (editando) {
+    document.querySelector(`${ID_FORMULARIO_HTML} .edit-status`).classList.remove('d-none')
+  }
+
   document.querySelector(`${ID_FORMULARIO_HTML} .cancel-edit`).classList.remove('d-none')
 }
 

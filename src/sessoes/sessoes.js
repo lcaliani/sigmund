@@ -110,7 +110,7 @@ const inicializarCalendario = () => {
         hora_inicio: dataHora.time,
         data_fim: dataHora.date,
       }
-      modalNew.preencherCampos(campos)
+      modalNew.preencherCampos(campos, false)
       modalNew.openModal()
     }
   });
