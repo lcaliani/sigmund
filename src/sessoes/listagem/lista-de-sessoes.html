@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8">
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'unsafe-inline' 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'unsafe-inline' 'self'">
 
     <link rel="stylesheet" href="../../../css/normalize.css">
     <link rel="stylesheet" href="../../../css/skeleton.css">
@@ -12,14 +12,29 @@
 
     <script src="./lista-de-sessoes.js"></script>
 
-
   </head>
   <body>
+    <button id="sessoes-adicionar-marcacao" class="d-none"></button>
     <div class="container">
       <h1>Lista de sessoes de: 
           <span id="titulo-nome-paciente"></span>
       </h1>
+
+      <table class="u-full-width" name="tabela-lista-sessoes">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Das</th>
+            <th>Até</th>
+            <th>Notas</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="conteudo-lista-sessoes">
+        </tbody>
+      </table>
     </div>
 
+    <div w3-include-html="../modal-de-marcacao/modal-de-marcacao.html"></div>
   </body>
 </html>

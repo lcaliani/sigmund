@@ -46,10 +46,18 @@ class SessaoRepositorio extends Repositorio {
     /**
      * Retorna as sessões com o nome do paciente junto
      * @param {string} orderBy 
+     * @param {int} idPaciente Id do paciente, opcional 
      * @returns {Promise<array<object>>}
      */
-    async todasComPaciente(orderBy = 'nome') {
-        let result = []
+    async todasComPaciente(orderBy = 'nome', idPaciente = 0) {
+        idPaciente = parseInt(idPaciente)
+
+        let whereIdPaciente = ''
+        const idPacienteValido = idPaciente !== undefined && !Number.isNaN(idPaciente) && idPaciente != 0
+        if (idPacienteValido) {
+            whereIdPaciente = `AND ${this.campos.id_paciente} = ${idPaciente}`
+        }
+
         const instrucao = `
             SELECT 
                 ${this.TABLE}.*,
@@ -58,7 +66,10 @@ class SessaoRepositorio extends Repositorio {
             WHERE ${this.TABLE}.${this.campos.id_paciente} = ${PacienteRepositorio.TABLE}.${PacienteRepositorio.campos.id}
                 AND ${this.TABLE}.${this.campos.status} = 1
                 AND ${PacienteRepositorio.TABLE}.${PacienteRepositorio.campos.status} = 1
+                ${whereIdPaciente}
             ORDER BY ${orderBy}`
+
+        let result = []
         return new Promise((resolve, reject) => {
             this.con.all(instrucao, [], (error, rows) => {
                 if (error) {

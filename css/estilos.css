@@ -1,9 +1,12 @@
 :root {
   --white: #fff;
   --warning: #ffc107;
+  --warning-hover: #947107;
   --danger: #e97979;
+  --danger-hover: #701414;
   --info: #1EAEDB;
-  --danger-hover: #ef5c5c;
+  --info-hover: #0e4c5f;
+  --secondary-text: #838282;
 }
 
 .d-none {
@@ -61,6 +64,10 @@ tr[role="presentation"].fc-scrollgrid-section-body table {
   border-radius: 0.25rem;
 }
 
+.secondary-text {
+  color: var(--secondary-text);
+}
+
 .badge-warning {
   color: var(--white);
   background-color: var(--warning);
@@ -74,10 +81,22 @@ tr[role="presentation"].fc-scrollgrid-section-body table {
   color: var(--warning)
 }
 
+.link-warning:hover {
+  color: var(--warning-hover)
+}
+
 .link-danger {
   color: var(--danger)
 }
 
+.link-danger:hover {
+  color: var(--danger-hover)
+}
+
 .link-info {
   color: var(--info)
+}
+
+.link-info:hover {
+  color: var(--info-hover)
 }
