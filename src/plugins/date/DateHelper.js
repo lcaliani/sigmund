@@ -10,6 +10,7 @@ class DateHelper {
     constructor(fullDate) {
         this.fullDate = new Date(fullDate)
         this._date = ''
+        this._dateBR = ''
         this._time = ''
     }
 
@@ -19,6 +20,14 @@ class DateHelper {
       month = this.addLeadingZero(month)
       
       return `${this.fullDate.getFullYear()}-${month}-${this.fullDate.getDate()}`
+    }
+
+    /** @returns {string} Data no formato `yyyy-MM-dd` | ex: 06-12-2022 */
+    get dateBR() {
+        let month = this.fullDate.getMonth() + 1
+        month = this.addLeadingZero(month)
+        
+        return `${this.fullDate.getDate()}/${month}/${this.fullDate.getFullYear()}`
     }
 
     /** @returns {string} Hora e minuto no formato `HH:mm` | ex: 07:08 */
