@@ -100,3 +100,12 @@ tr[role="presentation"].fc-scrollgrid-section-body table {
 .link-info:hover {
   color: var(--info-hover)
 }
+
+.lista-de-sessoes__notas {
+  /* @see https://www.codegrepper.com/code-examples/css/text-overflow%3A+ellipsis%3B+in+second+line+css */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
