@@ -89,7 +89,7 @@ function montarHtmlTabela(registros) {
             <td>${dataHoraInicio.dateBR}</td>
             <td>${dataHoraInicio.time}</td>
             <td>${dataHoraFim.time}</td>
-            <td class="${possuiDescricao ? '' : 'secondary-text'}">
+            <td class="${possuiDescricao ? '' : 'secondary-text'} lista-de-sessoes__notas">
               ${possuiDescricao ? registro.descricao : MENSAGENS.notas_vazias}
             </td>
             <td ${datasets}>${actions}</td>
