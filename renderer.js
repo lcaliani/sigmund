@@ -20,5 +20,15 @@ window.onload = () => {
         }
       )
     })
+
+    document.querySelector('#botao-relatorios').addEventListener('click', () => {
+      console.log('Abrindo tela de relatórios')
+      ipc.send(
+        'abrir_janela_relatorios',
+        {
+          'dados': {}
+        }
+      )
+    })
 }
 

@@ -101,6 +101,11 @@ tr[role="presentation"].fc-scrollgrid-section-body table {
   color: var(--info-hover)
 }
 
+.label-inline {
+  display: inline;
+}
+
+/* Estilos proprios */
 .lista-de-sessoes__notas {
   /* @see https://www.codegrepper.com/code-examples/css/text-overflow%3A+ellipsis%3B+in+second+line+css */
   display: -webkit-box;

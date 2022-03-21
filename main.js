@@ -24,6 +24,7 @@ const criarJanelaPrincipal = () => {
   prepararJanelaDeProntuarios(janelaPrincipal)
   prepararJanelaDeSessoes(janelaPrincipal)
   prepararJanelaDeListagemDeSessoes(janelaPrincipal)
+  prepararJanelaDeRelatorios(janelaPrincipal)
 
   // Setando menu na tela inicial
   const menu = new Menu()
@@ -178,6 +179,40 @@ const prepararJanelaDeListagemDeSessoes = (janelaPai) => {
     janela.webContents.on('did-finish-load', () => {
       janela.webContents.send('dados_enviados_do_paciente', dadosRecebidos.dados)
     })
+  })
+}
+
+/**
+ * "Instala" o event listener que fica ouvindo o evento "abrir_janela_lista_de_sessoes"
+ * e a partir dele abre a janela de listagem de sessoes
+ * @param {string} janelaPai
+ * @return {undefined}
+ **/
+ const prepararJanelaDeRelatorios = (janelaPai) => {
+  ipcMain.on('abrir_janela_relatorios', (evento, dadosRecebidos) => {
+    const opcoes = {
+        parent: janelaPai,
+        modal: true,
+        center: true,
+        title: 'Relatórios',
+        width: 1280,
+        height: 720,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+        },
+        resizable: false,
+    }
+
+    let janela = new BrowserWindow(opcoes)
+
+    /** @windows @mac only */
+    janela.movable = false
+
+    janela.loadFile('./src/relatorio/relatorio.html')
+    janela.webContents.openDevTools()
+    janela.show()
+    janela.setMenu(new Menu());
   })
 }
 
