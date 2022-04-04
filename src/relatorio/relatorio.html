@@ -27,7 +27,7 @@
             <div class="row">
               <div class="twelve columns">
                 <label for="id_paciente">Paciente:</label>
-                  <select name="id_paciente" id="id_paciente">
+                  <select name="id_paciente" id="id_paciente" required>
                   </select>
               </div>
             </div>
@@ -37,19 +37,20 @@
                     <label for="data_hora_inicio" class="label-inline">
                       Data inicial:
                     </label>
-                    <input type="date" name="data_hora_inicio">
+                    <input type="date" name="data_hora_inicio" required>
                 </div>
 
                 <div class="four columns">
                     <label for="data_hora_fim" class="label-inline">
                       Data final:
                     </label>
-                    <input type="date" name="data_hora_fim">
+                    <input type="date" name="data_hora_fim" required>
                 </div>
 
                 <div class="four columns">
-                  <input type="checkbox" name="todas_as_sessoes">
-                  <label for="todas_as_sessoes" class="label-inline"> Todas as sessoes</label>
+                  <!-- Ainda não usado -->
+                  <input type="checkbox" name="todas_as_sessoes" class="d-none">
+                  <label for="todas_as_sessoes" class="label-inline d-none"> Todas as sessoes</label>
                 </div>
 
             </div>
@@ -68,9 +69,8 @@
         <table class="u-full-width" name="tabela-lista-sessoes">
             <thead>
               <tr>
-                <th>Data</th>
-                <th>Hora de início</th>
-                <th>Hora de finalização</th>
+                <th>Data e hora de início</th>
+                <th>Data e hora de finalização</th>
                 <th>Notas</th>
                 <th>Incluir no relatório?</th>
               </tr>

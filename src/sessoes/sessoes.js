@@ -123,5 +123,3 @@ const inicializarCalendario = () => {
 document.addEventListener('DOMContentLoaded', function() {
   inicializar()
 })
-
-
