@@ -3,6 +3,8 @@ const SessaoRepositorio = new (require('../sessoes/SessaoRepositorio'))
 
 const DateHelper = require('../plugins/date/DateHelper')
 
+const GeradorDePdf = require('./geradorDePdf')
+
 /**
 * Seletor que identifica o formulário de manipulação de dados desse contexto
 */
@@ -119,7 +121,11 @@ const vincularAcoes = () => {
   // Limpeza dos inputs ao cancelar edição
   document.querySelector(`${ID_FORMULARIO_HTML} .cancel-edit`).addEventListener('click', limparCampos)
 
+  // Limpar dados da busca na tabela
   document.querySelector(BOTAO_LIMPAR_BUSCA).addEventListener('click', limparBusca)
+
+  // Gerar relatório ao clicar no botão
+  document.querySelector(BOTAO_GERAR_RELATORIO).addEventListener('click', GeradorDePdf.gerarRelatorio)
 }
 
 /**

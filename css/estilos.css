@@ -138,3 +138,10 @@ tr[role="presentation"].fc-scrollgrid-section-body table {
 }
 
 
+#pdf h1 {
+  text-align: center;
+}
+
+#pdf .dados-cadastrais p {
+  margin-bottom: 3px;
+}
