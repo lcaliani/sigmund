@@ -10,6 +10,12 @@ const ID_FORMULARIO_HTML = '#formulario-busca'
 
 const NOME_TABELA_HTML = 'tabela-lista-sessoes'
 
+/** Botão de geração do relatório, exibido após retornar resultados */
+const BOTAO_GERAR_RELATORIO = "#botao-gerar-relatorio"
+
+/** Botão de limpeza dos dados do relatório, exibido após retornar resultados */
+const BOTAO_LIMPAR_BUSCA = "#botao-limpar-busca"
+
 /**
  * Campos do formulário
  */
@@ -112,6 +118,8 @@ const vincularAcoes = () => {
 
   // Limpeza dos inputs ao cancelar edição
   document.querySelector(`${ID_FORMULARIO_HTML} .cancel-edit`).addEventListener('click', limparCampos)
+
+  document.querySelector(BOTAO_LIMPAR_BUSCA).addEventListener('click', limparBusca)
 }
 
 /**
@@ -127,7 +135,7 @@ const limparCampos = (event) => {
 }
 
 /**
- * Busca os dados do paciente, baseado nos valores informados no formulário
+ * Busca e disponibiliza os dados do paciente, baseado nos valores informados no formulário
  * @param {Event} event 
  */
 const buscar = async (event) => {
@@ -144,6 +152,27 @@ const buscar = async (event) => {
     dataHoraFim
   )
   document.querySelector(`[name="${NOME_TABELA_HTML}"] tbody`).innerHTML = montarHtmlTabela(registros)
+  
+  // Disponibiliza botões para gerar o relatório
+  if (registros.length > 0) {
+    document.querySelector(BOTAO_GERAR_RELATORIO).classList.remove('d-none')
+    document.querySelector(BOTAO_LIMPAR_BUSCA).classList.remove('d-none')
+  }
+}
+
+/**
+ * Limpa os resultados da busca
+ * @param {Event} event
+ * @return {undefined}
+ */
+const limparBusca = (event) => {
+  if (event !== undefined) {
+    event.preventDefault();
+  }
+
+  document.querySelector(`[name="${NOME_TABELA_HTML}"] tbody`).innerHTML = ''
+  document.querySelector(BOTAO_GERAR_RELATORIO).classList.add('d-none')
+  document.querySelector(BOTAO_LIMPAR_BUSCA).classList.add('d-none')
 }
 
 // Inicialização

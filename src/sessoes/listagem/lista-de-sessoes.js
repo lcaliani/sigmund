@@ -68,7 +68,6 @@ function montarHtmlTabela(registros) {
     }
 
     registros.forEach((registro) => {
-        const possuiDescricao = registro.descricao !== null
         // Cada campo possui seu dataset
         const datasets = `data-id="${registro.id}"
             data-id_paciente="${registro.id_paciente}"
@@ -85,12 +84,22 @@ function montarHtmlTabela(registros) {
         const dataHoraInicio = new DateHelper(registro.data_hora_inicio)
         const dataHoraFim = new DateHelper(registro.data_hora_fim)
 
+        const possuiDescricao = registro.descricao !== null
+        const descricao = possuiDescricao ? registro.descricao : MENSAGENS.notas_vazias
+
         tableHtml += `<tr>
             <td>${dataHoraInicio.dateBR}</td>
             <td>${dataHoraInicio.time}</td>
             <td>${dataHoraFim.time}</td>
-            <td class="${possuiDescricao ? '' : 'secondary-text'} lista-de-sessoes__notas">
-              ${possuiDescricao ? registro.descricao : MENSAGENS.notas_vazias}
+            <td>
+              <div class="table-column-text
+              ${possuiDescricao 
+                ? 'table-column-long-text'
+                : 'secondary-text'
+              }" 
+              title="${descricao}">
+                ${descricao}
+              </div>
             </td>
             <td ${datasets}>${actions}</td>
         </tr>`
