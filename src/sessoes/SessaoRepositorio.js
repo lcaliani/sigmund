@@ -46,16 +46,31 @@ class SessaoRepositorio extends Repositorio {
     /**
      * Retorna as sessões com o nome do paciente junto
      * @param {string} orderBy 
-     * @param {int} idPaciente Id do paciente, opcional 
+     * @param {int} idPaciente Id do paciente, opcional
+     * @param {string} dataHoraInicio Data e hora do inicio da sessao
+     * @param {string} dataHoraFim Data e hora do fim da sessão
      * @returns {Promise<array<object>>}
      */
-    async todasComPaciente(orderBy = 'nome', idPaciente = 0) {
+    async todasComPaciente(orderBy = 'nome', idPaciente = 0, dataHoraInicio = null, dataHoraFim = null) {
         idPaciente = parseInt(idPaciente)
 
-        let whereIdPaciente = ''
+        let where = ''
         const idPacienteValido = idPaciente !== undefined && !Number.isNaN(idPaciente) && idPaciente != 0
         if (idPacienteValido) {
-            whereIdPaciente = `AND ${this.campos.id_paciente} = ${idPaciente}`
+            where += ` AND ${this.campos.id_paciente} = ${idPaciente}`
+        }
+
+        const dataHoraInicioValido = dataHoraInicio !== undefined && dataHoraInicio !== null
+            && (Date.parse(dataHoraInicio) !== NaN)
+            console.log('valido: ', dataHoraInicioValido)
+        if (dataHoraInicioValido) {
+            where += ` AND ${this.campos.data_hora_inicio} >= "${dataHoraInicio}"`
+        }
+
+        const dataHoraFimValido = dataHoraFim !== undefined && dataHoraInicio !== null
+            && (Date.parse(dataHoraFim) !== NaN)
+        if (dataHoraFimValido) {
+            where += ` AND ${this.campos.data_hora_fim} <= "${dataHoraFim}"`
         }
 
         const instrucao = `
@@ -66,7 +81,7 @@ class SessaoRepositorio extends Repositorio {
             WHERE ${this.TABLE}.${this.campos.id_paciente} = ${PacienteRepositorio.TABLE}.${PacienteRepositorio.campos.id}
                 AND ${this.TABLE}.${this.campos.status} = 1
                 AND ${PacienteRepositorio.TABLE}.${PacienteRepositorio.campos.status} = 1
-                ${whereIdPaciente}
+                ${where}
             ORDER BY ${orderBy}`
 
         let result = []
