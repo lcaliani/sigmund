@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="../../css/normalize.css">
     <link rel="stylesheet" href="../../css/skeleton.css">
     <link rel="stylesheet" href="../../css/estilos.css">
-
+    
+    <!-- Script principal -->
     <script src="./relatorio.js"></script>
 
     <title>Sigmund 1.0 - Relatórios</title>
@@ -18,7 +19,6 @@
   <body>
     <div class="container">
       <h1>Relatórios</h1>
-      
       <div class="row">
         <div class="twelve columns">
           <form id="formulario-busca">
@@ -26,8 +26,9 @@
 
             <div class="row">
               <div class="twelve columns">
-                <label for="nome">Nome:</label>
-                <input type="text" class="u-full-width" name="nome">
+                <label for="id_paciente">Paciente:</label>
+                  <select name="id_paciente" id="id_paciente">
+                  </select>
               </div>
             </div>
 
@@ -58,7 +59,7 @@
             <input type="hidden" name="id">
 
             <button class="button-primary">Buscar</button>
-            <button class="cancel-edit d-none">Limpar</button>
+            <button class="cancel-edit">Limpar campos de busca</button>
           </form>
     
         </div>
