@@ -1,4 +1,5 @@
 const ProntuarioRepositorio = new  (require('../prontuario/ProntuarioRepositorio'))
+const RespostasAnamneseRepositorio = new (require('../prontuario/respostas_anamnese/RespostasAnamneseRepositorio'))
 const SessaoRepositorio = new (require('../sessoes/SessaoRepositorio'))
 
 const DateHelper = require('../plugins/date/DateHelper')
@@ -18,6 +19,8 @@ const BOTAO_GERAR_RELATORIO = "#botao-gerar-relatorio"
 /** Botão de limpeza dos dados do relatório, exibido após retornar resultados */
 const BOTAO_LIMPAR_BUSCA = "#botao-limpar-busca"
 
+const CHECK_INCLUIR_SESSAO = '[name="incluir-no-relatorio"]:checked'
+
 /**
  * Campos do formulário
  */
@@ -35,6 +38,7 @@ const MENSAGENS = {
     zero_registros: 'Nenhum registro encontrado',
     erro_generico: 'Houve um erro ao realizar a operação. Tente novamente.',
     notas_vazias: 'Nada consta.',
+    nenhuma_sessao_escolhida: 'É necessário marcar ao menos um registro para gerar o relatório',
 }
 
 /**
@@ -80,8 +84,10 @@ const montarSelectHtml = async () => {
   registros.forEach((registro) => {
       // Cada campo possui seu dataset
       const datasets = `data-id="${registro.id}"
-          data-data_hora_inicio="${registro.data_hora_inicio}"
-          data-data_hora_fim="${registro.data_hora_fim}"`
+        data-data_hora_inicio="${registro.data_hora_inicio}"
+        data-data_hora_fim="${registro.data_hora_fim}"
+        data-id_paciente="${registro.id_paciente}"
+      `
 
       const dataHoraInicio = new DateHelper(registro.data_hora_inicio)
       const dataHoraFim = new DateHelper(registro.data_hora_fim)
@@ -119,13 +125,15 @@ const vincularAcoes = () => {
   document.querySelector(ID_FORMULARIO_HTML).addEventListener('submit', buscar)
 
   // Limpeza dos inputs ao cancelar edição
-  document.querySelector(`${ID_FORMULARIO_HTML} .cancel-edit`).addEventListener('click', limparCampos)
+  document.querySelector(`${ID_FORMULARIO_HTML} .cancel-edit`)
+    .addEventListener('click', limparCampos)
 
   // Limpar dados da busca na tabela
   document.querySelector(BOTAO_LIMPAR_BUSCA).addEventListener('click', limparBusca)
 
   // Gerar relatório ao clicar no botão
-  document.querySelector(BOTAO_GERAR_RELATORIO).addEventListener('click', GeradorDePdf.gerarRelatorio)
+  document.querySelector(BOTAO_GERAR_RELATORIO)
+    .addEventListener('click', gerarRelatorio)
 }
 
 /**
@@ -179,6 +187,37 @@ const limparBusca = (event) => {
   document.querySelector(`[name="${NOME_TABELA_HTML}"] tbody`).innerHTML = ''
   document.querySelector(BOTAO_GERAR_RELATORIO).classList.add('d-none')
   document.querySelector(BOTAO_LIMPAR_BUSCA).classList.add('d-none')
+}
+
+/**
+ * Reune os dados de geracao de relatorio e gera o relatorio
+ * @param {Event} event 
+ * @returns 
+ */
+const gerarRelatorio = async (event) => {
+  if (event !== undefined) {
+    event.preventDefault();
+  }
+
+  const sessoesEscolhidasElements = document.querySelectorAll(CHECK_INCLUIR_SESSAO)
+
+  if (sessoesEscolhidasElements.length === 0) {
+    alert(MENSAGENS.nenhuma_sessao_escolhida)
+    return
+  }
+
+  let sessoesEscolhidasIds = []
+  sessoesEscolhidasElements.forEach((sessao) => {
+    sessoesEscolhidasIds.push(sessao.dataset.id)
+  })
+
+  const idPaciente = sessoesEscolhidasElements[0].dataset.id_paciente
+
+  const dadosPaciente = await ProntuarioRepositorio.find(idPaciente)
+  const respostasAnamnese = await RespostasAnamneseRepositorio.buscarRespostasPorIdDoPaciente(idPaciente)
+  const dadosSessoes = await SessaoRepositorio
+    .findAllByIds(sessoesEscolhidasIds, 'data_hora_inicio')
+
 }
 
 // Inicialização

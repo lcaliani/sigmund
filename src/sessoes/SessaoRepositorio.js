@@ -49,7 +49,7 @@ class SessaoRepositorio extends Repositorio {
      * @param {int} idPaciente Id do paciente, opcional
      * @param {string} dataHoraInicio Data e hora do inicio da sessao
      * @param {string} dataHoraFim Data e hora do fim da sessão
-     * @returns {Promise<array<object>>}
+     * @returns {Promise<array<object>>} Resultados com todos os dados da sessao + o nome do paciente
      */
     async todasComPaciente(orderBy = 'nome', idPaciente = 0, dataHoraInicio = null, dataHoraFim = null) {
         idPaciente = parseInt(idPaciente)
@@ -173,6 +173,33 @@ class SessaoRepositorio extends Repositorio {
                 }
                 console.warn(err)
                 return reject(false)
+            })
+        })
+    }
+
+    /**
+     * Recupera as sessões baseado em uma lista de ids
+     * @param {array<int>} ids 
+     * @return {Promise<array<object>>}
+     */
+    async findAllByIds(ids = [], orderBy = 'id') {
+        ids = ids.toString()
+        const instrucao = `SELECT * FROM ${this.TABLE} 
+            WHERE ${this.campos.id} IN (${ids})
+            ORDER BY ${orderBy}`
+        let result = []
+        return new Promise((resolve, reject) => {
+            this.con.all(instrucao, [], (error, rows) => {
+                if (error) {
+                    console.warn(error)
+                    reject('Erro ao recuperar os dados')
+                }
+
+                console.log(rows)
+                rows.forEach((row) => {
+                    result.push(row)
+                })
+                resolve(result)
             })
         })
     }

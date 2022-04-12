@@ -167,7 +167,7 @@ class RespostasAnamneseRepositorio extends Repositorio {
      * @returns {Promise<array<object>>}
      */
     async buscarRespostasPorIdDoPaciente(idPaciente) {
-        const query = `SELECT *
+        const query = `SELECT perguntas.pergunta, respostas.*
             FROM ${this.TABLE} respostas
             JOIN roteiro_de_anamnese perguntas
             WHERE respostas.id_roteiro = perguntas.id
