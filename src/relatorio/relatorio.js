@@ -1,7 +1,10 @@
 const ProntuarioRepositorio = new  (require('../prontuario/ProntuarioRepositorio'))
+const RespostasAnamneseRepositorio = new (require('../prontuario/respostas_anamnese/RespostasAnamneseRepositorio'))
 const SessaoRepositorio = new (require('../sessoes/SessaoRepositorio'))
 
 const DateHelper = require('../plugins/date/DateHelper')
+
+const GeradorDePdf = require('./geradorDePdf')
 
 /**
 * Seletor que identifica o formulário de manipulação de dados desse contexto
@@ -9,6 +12,14 @@ const DateHelper = require('../plugins/date/DateHelper')
 const ID_FORMULARIO_HTML = '#formulario-busca'
 
 const NOME_TABELA_HTML = 'tabela-lista-sessoes'
+
+/** Botão de geração do relatório, exibido após retornar resultados */
+const BOTAO_GERAR_RELATORIO = "#botao-gerar-relatorio"
+
+/** Botão de limpeza dos dados do relatório, exibido após retornar resultados */
+const BOTAO_LIMPAR_BUSCA = "#botao-limpar-busca"
+
+const CHECK_INCLUIR_SESSAO = '[name="incluir-no-relatorio"]:checked'
 
 /**
  * Campos do formulário
@@ -27,6 +38,7 @@ const MENSAGENS = {
     zero_registros: 'Nenhum registro encontrado',
     erro_generico: 'Houve um erro ao realizar a operação. Tente novamente.',
     notas_vazias: 'Nada consta.',
+    nenhuma_sessao_escolhida: 'É necessário marcar ao menos um registro para gerar o relatório',
 }
 
 /**
@@ -72,8 +84,10 @@ const montarSelectHtml = async () => {
   registros.forEach((registro) => {
       // Cada campo possui seu dataset
       const datasets = `data-id="${registro.id}"
-          data-data_hora_inicio="${registro.data_hora_inicio}"
-          data-data_hora_fim="${registro.data_hora_fim}"`
+        data-data_hora_inicio="${registro.data_hora_inicio}"
+        data-data_hora_fim="${registro.data_hora_fim}"
+        data-id_paciente="${registro.id_paciente}"
+      `
 
       const dataHoraInicio = new DateHelper(registro.data_hora_inicio)
       const dataHoraFim = new DateHelper(registro.data_hora_fim)
@@ -111,7 +125,15 @@ const vincularAcoes = () => {
   document.querySelector(ID_FORMULARIO_HTML).addEventListener('submit', buscar)
 
   // Limpeza dos inputs ao cancelar edição
-  document.querySelector(`${ID_FORMULARIO_HTML} .cancel-edit`).addEventListener('click', limparCampos)
+  document.querySelector(`${ID_FORMULARIO_HTML} .cancel-edit`)
+    .addEventListener('click', limparCampos)
+
+  // Limpar dados da busca na tabela
+  document.querySelector(BOTAO_LIMPAR_BUSCA).addEventListener('click', limparBusca)
+
+  // Gerar relatório ao clicar no botão
+  document.querySelector(BOTAO_GERAR_RELATORIO)
+    .addEventListener('click', gerarRelatorio)
 }
 
 /**
@@ -127,7 +149,7 @@ const limparCampos = (event) => {
 }
 
 /**
- * Busca os dados do paciente, baseado nos valores informados no formulário
+ * Busca e disponibiliza os dados do paciente, baseado nos valores informados no formulário
  * @param {Event} event 
  */
 const buscar = async (event) => {
@@ -144,6 +166,72 @@ const buscar = async (event) => {
     dataHoraFim
   )
   document.querySelector(`[name="${NOME_TABELA_HTML}"] tbody`).innerHTML = montarHtmlTabela(registros)
+  
+  // Disponibiliza botões para gerar o relatório
+  if (registros.length > 0) {
+    document.querySelector(BOTAO_GERAR_RELATORIO).classList.remove('d-none')
+    document.querySelector(BOTAO_LIMPAR_BUSCA).classList.remove('d-none')
+  }
+}
+
+/**
+ * Limpa os resultados da busca
+ * @param {Event} event
+ * @return {undefined}
+ */
+const limparBusca = (event) => {
+  if (event !== undefined) {
+    event.preventDefault();
+  }
+
+  document.querySelector(`[name="${NOME_TABELA_HTML}"] tbody`).innerHTML = ''
+  document.querySelector(BOTAO_GERAR_RELATORIO).classList.add('d-none')
+  document.querySelector(BOTAO_LIMPAR_BUSCA).classList.add('d-none')
+}
+
+/**
+ * Reune os dados de geracao de relatorio e gera o relatorio
+ * @param {Event} event 
+ * @returns 
+ */
+const gerarRelatorio = async (event) => {
+  if (event !== undefined) {
+    event.preventDefault();
+  }
+
+  const sessoesEscolhidasElements = document.querySelectorAll(CHECK_INCLUIR_SESSAO)
+
+  if (sessoesEscolhidasElements.length === 0) {
+    alert(MENSAGENS.nenhuma_sessao_escolhida)
+    return
+  }
+
+  let sessoesEscolhidasIds = []
+  sessoesEscolhidasElements.forEach((sessao) => {
+    sessoesEscolhidasIds.push(sessao.dataset.id)
+  })
+
+  const idPaciente = sessoesEscolhidasElements[0].dataset.id_paciente
+
+  let dadosPaciente = await ProntuarioRepositorio.find(idPaciente)
+  let respostasAnamnese = await RespostasAnamneseRepositorio.buscarRespostasPorIdDoPaciente(idPaciente)
+  let dadosSessoes = await SessaoRepositorio
+    .findAllByIds(sessoesEscolhidasIds, 'data_hora_inicio')
+
+  if (dadosPaciente.length > 0 
+      && respostasAnamnese.length > 0
+      && dadosSessoes.length > 0
+  ) {
+    dadosPaciente = dadosPaciente[0]
+  }
+
+  dadosSessoes.map((sessao) => {
+    sessao.descricao = sessao.descricao === null 
+      ? MENSAGENS.notas_vazias
+      : sessao.descricao
+  })
+
+  GeradorDePdf.construirPaginas(dadosPaciente, respostasAnamnese, dadosSessoes)
 }
 
 // Inicialização
