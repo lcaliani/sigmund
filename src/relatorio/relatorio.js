@@ -213,11 +213,25 @@ const gerarRelatorio = async (event) => {
 
   const idPaciente = sessoesEscolhidasElements[0].dataset.id_paciente
 
-  const dadosPaciente = await ProntuarioRepositorio.find(idPaciente)
-  const respostasAnamnese = await RespostasAnamneseRepositorio.buscarRespostasPorIdDoPaciente(idPaciente)
-  const dadosSessoes = await SessaoRepositorio
+  let dadosPaciente = await ProntuarioRepositorio.find(idPaciente)
+  let respostasAnamnese = await RespostasAnamneseRepositorio.buscarRespostasPorIdDoPaciente(idPaciente)
+  let dadosSessoes = await SessaoRepositorio
     .findAllByIds(sessoesEscolhidasIds, 'data_hora_inicio')
 
+  if (dadosPaciente.length > 0 
+      && respostasAnamnese.length > 0
+      && dadosSessoes.length > 0
+  ) {
+    dadosPaciente = dadosPaciente[0]
+  }
+
+  dadosSessoes.map((sessao) => {
+    sessao.descricao = sessao.descricao === null 
+      ? MENSAGENS.notas_vazias
+      : sessao.descricao
+  })
+
+  GeradorDePdf.construirPaginas(dadosPaciente, respostasAnamnese, dadosSessoes)
 }
 
 // Inicialização

@@ -1,113 +1,144 @@
-const { jsPDF } = require('jspdf')
+const DateHelper = require('../plugins/date/DateHelper')
 
-const typography = {
-  textSize: 14,
-  subtitleSize: 24,
-  titleSize: 36,
+let pdfMake = require('pdfmake/build/pdfmake.js');
+let pdfFonts = require('pdfmake/build/vfs_fonts.js');
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+/**
+ * Constrói o template de perguntas e respostas de anamnese no pdf
+ * @param {object} docDefinition Template do pdf em formato de objeto
+ * @param {object} respostasAnamnese Objeto com os dados das perguntas e respostas de anamnese
+ */
+const construirAnamnese = (docDefinition, respostasAnamnese) => {
+  // Anamnese
+  docDefinition.content.push({ text: 'Anamnese', style: 'subheader'})
+  respostasAnamnese.forEach((anamnese) => {
+    docDefinition.content.push({ text: anamnese.pergunta, style: 'strong', lineHeight: 1 })
+    docDefinition.content.push({ text: anamnese.resposta, style: 'normal', lineHeight: 1 })
+    docDefinition.content.push(' ')
+  })
+  docDefinition.content.push({ text: '', pageBreak: 'after'})
 }
 
-const spacing = {
-  paragraph: 10,
+/**
+ * Constrói o template de sessões de anamnese no pdf
+ * @param {object} docDefinition Template do pdf em formato de objeto
+ * @param {object} sessoes Objeto com os dados das sessões
+ */
+const construirSessoes = (docDefinition, sessoes) => {
+  docDefinition.content.push({ text: 'Sessões', style: 'header' })
+  sessoes.forEach((sessao) => {
+    const dataHoraInicio = new DateHelper(sessao.data_hora_inicio)
+    const dataHoraFim = new DateHelper(sessao.data_hora_fim)
+
+    docDefinition.content.push({ text: dataHoraInicio.dateBR, style: 'subheader'})
+
+    docDefinition.content.push({ 
+      text: [
+        'Data e hora de inicio: ', 
+        {
+          text: `${dataHoraInicio.dateBR} as ${dataHoraInicio.time}` ,
+          style: 'normal'
+        }
+      ], style: 'strong' }
+    )
+
+    docDefinition.content.push({ 
+      text: [
+        'Data e hora de finalizaçao: ', 
+        {
+          text: `${dataHoraFim.dateBR} as ${dataHoraFim.time}` ,
+          style: 'normal'
+        }
+      ], style: 'strong' }
+    )
+
+    docDefinition.content.push({ text: 'Notas:', style: 'strong', lineHeight: 1 })
+    docDefinition.content.push({ text: sessao.descricao, style: 'normal', lineHeight: 1 })
+    docDefinition.content.push(' ')
+  })
 }
 
-const adicionarTitulo = (doc, titleText = 'Título', y = 15) => {
-  doc.setFont('Helvetica', 'normal', 'bold')
-  doc.setFontSize(typography.titleSize)
+/**
+ * Gera o pdf
+ * @param {object} dadosPaciente Informações dos dados do paciente
+ * @param {object} respostasAnamnese Informações das perguntas e respostas de anamnese
+ * @param {object} sessoes Informações das sessões
+ */
+const construirPaginas = ({
+  cidade,
+  data_nascimento,
+  endereco,
+  nome,
+  nome_mae,
+  nome_pai,
+} = dadosPaciente, respostasAnamnese, sessoes) => {
 
-  doc.text(titleText,
-    (doc.internal.pageSize.width / 2),
-    y,
-    { align: 'center' }
-  )
-
-  return y
-}
-
-const construirPaginas = (event) => {
-    if (event !== undefined) {
-      event.preventDefault();
+  const styles = {
+    header: {
+      fontSize: 36,
+      bold: true,
+      alignment: 'center',
+      lineHeight: 1.5,
+    },
+    subheader: {
+      fontSize: 24,
+      bold: true,
+      alignment: 'left',
+      lineHeight: 1.5,
+    },
+    strong: {
+      bold: true,
+      alignment: 'left',
+      lineHeight: 1.5,
+    },
+    normal: {
+      bold: false,
+      alignment: 'left',
+      lineHeight: 1.5,
     }
-
-    const doc = new jsPDF()
-
-    let currentVerticalPosition = 0
-    
-    currentVerticalPosition += adicionarTitulo(doc, 'Relatório')
-    currentVerticalPosition += currentVerticalPosition + 10
-
-    let text = ''
-
-    // Subtitulo dados cadastrais
-    text = 'Dados cadastrais'
-    doc.setFontSize(typography.subtitleSize)
-    doc.text(text, 10, currentVerticalPosition)
-    currentVerticalPosition += spacing.paragraph
-
-    // Tamanho de texto comum
-    doc.setFontSize(typography.textSize)
-    
-    // Nome do paciente
-    doc.setFont('Helvetica', 'normal', 'bold')
-    text = 'Nome: '
-    doc.text(text, 10, currentVerticalPosition)
-
-    doc.setFont('Helvetica', 'normal', 'normal')
-    doc.text('Leonardo Caliani Ruellas', 26, currentVerticalPosition)
-    currentVerticalPosition += spacing.paragraph
-    
-    // Nome do pai do paciente
-    doc.setFont('Helvetica', 'normal', 'bold')
-    text = 'Nome do pai: '
-    doc.text(text, 10, currentVerticalPosition)
-
-    doc.setFont('Helvetica', 'normal', 'normal')
-    doc.text('Pai de Leonardo Caliani Ruellas', 42, currentVerticalPosition)
-    currentVerticalPosition += spacing.paragraph
-    
-    // Nome da mãe do paciente
-    doc.setFont('Helvetica', 'normal', 'bold')
-    text = 'Nome da mãe: '
-    doc.text(text, 10, currentVerticalPosition)
-
-    doc.setFont('Helvetica', 'normal', 'normal')
-    doc.text('Mãe de Leonardo Caliani Ruellas', 45, currentVerticalPosition)
-    currentVerticalPosition += spacing.paragraph
-
-    // Data de nascimento
-    doc.setFont('Helvetica', 'normal', 'bold')
-    text = 'Data de nascimento: '
-    doc.text(text, 10, currentVerticalPosition)
-
-    doc.setFont('Helvetica', 'normal', 'normal')
-    doc.text('17/06/1994', 59, currentVerticalPosition)
-    currentVerticalPosition += spacing.paragraph
-
-    // Cidade
-    doc.setFont('Helvetica', 'normal', 'bold')
-    text = 'Cidade: '
-    doc.text(text, 10, currentVerticalPosition)
-
-    doc.setFont('Helvetica', 'normal', 'normal')
-    doc.text('Marilia', 29, currentVerticalPosition)
-    currentVerticalPosition += spacing.paragraph
-
-    // Endereço
-    doc.setFont('Helvetica', 'normal', 'bold')
-    text = 'Endereço: '
-    doc.text(text, 10, currentVerticalPosition)
-
-    doc.setFont('Helvetica', 'normal', 'normal')
-    doc.text('Rua de Leonardo Caliani Ruellas, 59 - Apto 522', 35, currentVerticalPosition)
-    currentVerticalPosition += spacing.paragraph
-
-    // doc.text('Relatório do paciente aaaa',
-    //   (doc.internal.pageSize.width / 2),
-    //   15,
-    //   { align: 'center' }
-    // )
-  
-    doc.setFont('Helvetica', 'normal', 'normal')
-    doc.save('ola_mundo.pdf')
   }
+
+  const defaultStyle = {
+    fontSize: 14,
+  }
+
+  data_nascimento = new DateHelper(data_nascimento)
+  let docDefinition = {
+    content: [
+      { text: 'Relatorio', style: 'header' },
+      { text: 'Dados cadastrais', style: 'subheader'},
+      { text: ['Nome: ', { text: nome , style: 'normal' }], style: 'strong' },
+      { text: ['Data de nascimento: ', { text: data_nascimento.dateBR , style: 'normal' }], style: 'strong' },
+      { text: ['Nome da mae: ', { text: nome_mae , style: 'normal' }], style: 'strong' },
+      { text: ['Nome do pai: ', { text: nome_pai , style: 'normal' }], style: 'strong' },
+      { 
+          text: [
+              'Cidade:',
+              { 
+                  text: cidade,
+                  style: 'normal' 
+              },
+              '    ',
+              'Endereço: ',
+              { 
+                  text: endereco,
+                  style: 'normal',
+              },
+          ], 
+          style: 'strong'
+      },
+      ' ',
+    ],
+  
+    styles,
+    defaultStyle,
+  }
+
+  construirAnamnese(docDefinition, respostasAnamnese)
+  construirSessoes(docDefinition, sessoes)
+
+  pdfMake.createPdf(docDefinition).open();
+}
 
 module.exports = { construirPaginas }
