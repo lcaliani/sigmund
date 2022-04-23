@@ -60,15 +60,12 @@ class SessaoRepositorio extends Repositorio {
             where += ` AND ${this.campos.id_paciente} = ${idPaciente}`
         }
 
-        const dataHoraInicioValido = dataHoraInicio !== undefined && dataHoraInicio !== null
-            && (Date.parse(dataHoraInicio) !== NaN)
-            console.log('valido: ', dataHoraInicioValido)
+        const dataHoraInicioValido = dataHoraInicio !== null && (Date.parse(dataHoraInicio) !== NaN)
         if (dataHoraInicioValido) {
             where += ` AND ${this.campos.data_hora_inicio} >= "${dataHoraInicio}"`
         }
 
-        const dataHoraFimValido = dataHoraFim !== undefined && dataHoraInicio !== null
-            && (Date.parse(dataHoraFim) !== NaN)
+        const dataHoraFimValido = dataHoraInicio !== null && (Date.parse(dataHoraFim) !== NaN)
         if (dataHoraFimValido) {
             where += ` AND ${this.campos.data_hora_fim} <= "${dataHoraFim}"`
         }

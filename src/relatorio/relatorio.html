@@ -49,8 +49,8 @@
 
                 <div class="four columns">
                   <!-- Ainda não usado -->
-                  <input type="checkbox" name="todas_as_sessoes" class="d-none">
-                  <label for="todas_as_sessoes" class="label-inline d-none"> Todas as sessoes</label>
+                  <input type="checkbox" name="todas_as_sessoes" class="">
+                  <label for="todas_as_sessoes" class="label-inline"> Todas as sessoes</label>
                 </div>
 
             </div>
@@ -65,21 +65,29 @@
     
         </div>
       </div>
+
+      <hr>
+
       <div class="row">
-        <button class="d-none button-primary" id="botao-gerar-relatorio">Gerar relatório</button>
+        <button class="d-none button-success" id="botao-gerar-relatorio">Gerar relatório</button>
         <button class="d-none" id="botao-limpar-busca">Limpar busca</button>
       </div>
       <div class="row">
         <table class="u-full-width" name="tabela-lista-sessoes">
             <thead>
               <tr>
+                <th>Incluir no relatório?</th>
                 <th>Data e hora de início</th>
                 <th>Data e hora de finalização</th>
                 <th>Notas</th>
-                <th>Incluir no relatório?</th>
               </tr>
             </thead>
             <tbody id="conteudo-lista-sessoes">
+              <tr>
+                <td colspan="6">
+                  Preencha os campos e clique em Buscar para realizar uma nova busca.
+                </td>
+              </tr>
             </tbody>
           </table>
       </div>
