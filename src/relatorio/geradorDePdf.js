@@ -4,6 +4,48 @@ let pdfMake = require('pdfmake/build/pdfmake.js');
 let pdfFonts = require('pdfmake/build/vfs_fonts.js');
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
+
+/**
+ * Constrói o template de dados cadastrais do paciente
+ * @param {object} docDefinition
+ * @param {object<string,mixed>} dadosPaciente
+ */
+const construirDadosCadastrais = (docDefinition, {
+  cidade,
+  data_nascimento,
+  endereco,
+  nome,
+  nome_mae,
+  nome_pai,
+} = dadosPaciente) => {
+  data_nascimento = new DateHelper(data_nascimento)
+
+  docDefinition.content.push()
+  docDefinition.content.push({ text: 'Dados cadastrais', style: 'subheader'})
+  docDefinition.content.push({ text: ['Nome: ', { text: nome , style: 'normal' }], style: 'strong' })
+  docDefinition.content.push({ text: ['Data de nascimento: ', { text: data_nascimento.dateBR , style: 'normal' }],
+    style: 'strong' })
+  docDefinition.content.push({ text: ['Nome da mãe: ', { text: nome_mae , style: 'normal' }], style: 'strong' })
+  docDefinition.content.push({ text: ['Nome do pai: ', { text: nome_pai , style: 'normal' }], style: 'strong' })
+  docDefinition.content.push({
+      text: [
+          'Cidade:',
+          {
+              text: cidade,
+              style: 'normal'
+          },
+          '    ',
+          'Endereço: ',
+          {
+              text: endereco,
+              style: 'normal',
+          },
+      ],
+      style: 'strong'
+  })
+  docDefinition.content.push(' ')
+}
+
 /**
  * Constrói o template de perguntas e respostas de anamnese no pdf
  * @param {object} docDefinition Template do pdf em formato de objeto
@@ -35,7 +77,7 @@ const construirSessoes = (docDefinition, sessoes) => {
 
     docDefinition.content.push({ 
       text: [
-        'Data e hora de inicio: ', 
+        'Data e hora de início: ',
         {
           text: `${dataHoraInicio.dateBR} as ${dataHoraInicio.time}` ,
           style: 'normal'
@@ -43,18 +85,19 @@ const construirSessoes = (docDefinition, sessoes) => {
       ], style: 'strong' }
     )
 
-    docDefinition.content.push({ 
+    docDefinition.content.push({
       text: [
-        'Data e hora de finalizaçao: ', 
+        'Data e hora de finalização: ',
         {
           text: `${dataHoraFim.dateBR} as ${dataHoraFim.time}` ,
           style: 'normal'
         }
-      ], style: 'strong' }
-    )
+      ], style: 'strong'
+    })
 
     docDefinition.content.push({ text: 'Notas:', style: 'strong', lineHeight: 1 })
     docDefinition.content.push({ text: sessao.descricao, style: 'normal', lineHeight: 1 })
+    docDefinition.content.push(' ')
     docDefinition.content.push(' ')
   })
 }
@@ -65,14 +108,7 @@ const construirSessoes = (docDefinition, sessoes) => {
  * @param {object} respostasAnamnese Informações das perguntas e respostas de anamnese
  * @param {object} sessoes Informações das sessões
  */
-const construirPaginas = ({
-  cidade,
-  data_nascimento,
-  endereco,
-  nome,
-  nome_mae,
-  nome_pai,
-} = dadosPaciente, respostasAnamnese, sessoes) => {
+const construirPaginas = (dadosPaciente, respostasAnamnese, sessoes) => {
 
   const styles = {
     header: {
@@ -103,38 +139,13 @@ const construirPaginas = ({
     fontSize: 14,
   }
 
-  data_nascimento = new DateHelper(data_nascimento)
   let docDefinition = {
-    content: [
-      { text: 'Relatorio', style: 'header' },
-      { text: 'Dados cadastrais', style: 'subheader'},
-      { text: ['Nome: ', { text: nome , style: 'normal' }], style: 'strong' },
-      { text: ['Data de nascimento: ', { text: data_nascimento.dateBR , style: 'normal' }], style: 'strong' },
-      { text: ['Nome da mae: ', { text: nome_mae , style: 'normal' }], style: 'strong' },
-      { text: ['Nome do pai: ', { text: nome_pai , style: 'normal' }], style: 'strong' },
-      { 
-          text: [
-              'Cidade:',
-              { 
-                  text: cidade,
-                  style: 'normal' 
-              },
-              '    ',
-              'Endereço: ',
-              { 
-                  text: endereco,
-                  style: 'normal',
-              },
-          ], 
-          style: 'strong'
-      },
-      ' ',
-    ],
-  
+    content: [ { text: 'Relatório', style: 'header' } ],
     styles,
     defaultStyle,
   }
 
+  construirDadosCadastrais(docDefinition, dadosPaciente)
   construirAnamnese(docDefinition, respostasAnamnese)
   construirSessoes(docDefinition, sessoes)
 
