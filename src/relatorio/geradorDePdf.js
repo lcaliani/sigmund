@@ -4,7 +4,6 @@ let pdfMake = require('pdfmake/build/pdfmake.js');
 let pdfFonts = require('pdfmake/build/vfs_fonts.js');
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-
 /**
  * Constrói o template de dados cadastrais do paciente
  * @param {object} docDefinition
@@ -139,17 +138,22 @@ const construirPaginas = (dadosPaciente, respostasAnamnese, sessoes) => {
     fontSize: 14,
   }
 
+  const currentDate = new Date().toLocaleString()
+  const documentTitle = `Relatório_${dadosPaciente.nome}_${currentDate}`
   let docDefinition = {
     content: [ { text: 'Relatório', style: 'header' } ],
     styles,
     defaultStyle,
+    info: {
+      title: documentTitle,
+    }
   }
 
   construirDadosCadastrais(docDefinition, dadosPaciente)
   construirAnamnese(docDefinition, respostasAnamnese)
   construirSessoes(docDefinition, sessoes)
 
-  pdfMake.createPdf(docDefinition).open();
+  pdfMake.createPdf(docDefinition).download(documentTitle);
 }
 
 module.exports = { construirPaginas }
