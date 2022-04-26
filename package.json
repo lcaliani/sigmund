@@ -4,7 +4,8 @@
   "description": "Sigmund v1",
   "main": "main.js",
   "scripts": {
-    "start": "APP_ENV=dev electron-forge start",
+    "start:dev": "APP_ENV=dev electron-forge start",
+    "start": "APP_ENV=prod electron-forge start",
     "test": "echo \"Error: no test specified\" && exit 1",
     "package": "electron-forge package",
     "make": "electron-forge make"
