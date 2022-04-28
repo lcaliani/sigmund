@@ -21,6 +21,7 @@
     "electron": "^17.0.1"
   },
   "dependencies": {
+    "adm-zip": "^0.5.9",
     "electron-squirrel-startup": "^1.0.0",
     "fullcalendar": "^5.10.2",
     "pdfmake": "^0.2.5",
