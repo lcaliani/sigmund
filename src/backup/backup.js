@@ -7,29 +7,67 @@ const BOTOES = {
 }
 
 /**
+ * 
+ * @returns {string} Path absoluto do diretório do banco de dados
+ */
+const databasePath = () => {
+  return `${process.cwd()}/database`
+}
+
+/**
  * Realiza o backup do banco, criando uma réplica compactada
  */
 async function backup() {
   try {
     const zip = new AdmZip();
-    const databasePath = `${process.cwd()}/database`
+    
     const parsedDate = `${new Date().toLocaleDateString().replaceAll('/', '-')}_${new Date().toLocaleTimeString().replaceAll(':', '-')}`
-    const outputFile = `${databasePath}/Sigmund_backup_${parsedDate}.zip`
+    const outputFile = `${databasePath()}/Sigmund_backup_${parsedDate}.zip`
 
-    zip.addLocalFile(`${databasePath}/database.db`)
+    zip.addLocalFile(`${databasePath()}/database.db`)
     zip.writeZip(outputFile);
     ipc.send(
       'backup_create_success',
       {
         dados: {
-          outputPath: databasePath,
+          outputPath: databasePath(),
           outputFile: outputFile
         }
       }
-  )
+    )
   } catch(e) {
     alert('Houve algum erro ao criar o backup. Tente novamente.')
     console.warn(e)
+  }
+}
+
+const abrirDialogDeRecuperacao = () => {
+  ipc.send(
+    'backup_import_select',
+    { 
+      dados: {
+        outputPath: databasePath(),
+      }
+    }
+  )
+}
+
+/**
+ * Recupera o arquivo de backup e apaga seu zip após a operação co sucesso
+ * @param {Event} event 
+ * @param {string} filePath Path do arquivo de backup
+ */
+const recoverBackup = (event, filePath) => {
+  const zip = new AdmZip(filePath);
+  try {
+    zip.extractAllTo(databasePath(), true);
+    ipc.send('backup_recovered_successfully', {
+      dados: { zipFile: filePath },
+    })
+    alert('Dados recuperados com sucesso!')
+  } catch (error) {
+    alert('Houve algum problema ao recuperar os dados. Tente novamente.')
+    console.warn(error)
   }
 }
 
@@ -39,7 +77,9 @@ async function backup() {
 const vincularAcoes = () => {
   document.querySelector(BOTOES.BACKUP).addEventListener('click', backup)
 
-  // document.querySelector(BOTOES.importar).addEventListener('click', importar)
+  document.querySelector(BOTOES.IMPORTAR).addEventListener('click', abrirDialogDeRecuperacao)
+
+  ipc.on('backup_path_was_selected', recoverBackup)
 }
 
 

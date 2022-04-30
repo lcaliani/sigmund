@@ -10,6 +10,7 @@ const {
 const customDialogs = require('./components/customDialogs')
 
 const path = require('path')
+const fs = require('fs')
 
 /**
  * Criar janela principal
@@ -196,7 +197,27 @@ const prepararJanelaDeRoteiroDeAnamnese = (janelaPai) => {
   janela.setMenu(new Menu());
 
   ipcMain.on('backup_create_success', (evento, dadosRecebidos) => {
-    customDialogs.dialogRecuperarBackup(janela, dadosRecebidos.dados)
+    customDialogs.dialogCriarBackup(janela, dadosRecebidos.dados)
+  })
+
+  ipcMain.on('backup_import_select', async (evento, dadosRecebidos) => {
+    const backupPath = await customDialogs.dialogRecuperarBackup(janela, dadosRecebidos.dados)
+    
+    const nothingSelected = backupPath === null
+    if (nothingSelected) {
+      return
+    }
+
+    janela.webContents.send('backup_path_was_selected', backupPath)
+  })
+
+  ipcMain.on('backup_recovered_successfully', (event, data) => {
+    fs.unlink(data.dados.zipFile, (error) => {
+      if (error) {
+        console.warn('Erro ao remover arquivo antigo de backup.', error)
+      }
+      console.log('Arquivo antigo de backup apagado com sucesso.')
+    })
   })
 }
 
