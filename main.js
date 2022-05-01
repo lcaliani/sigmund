@@ -169,7 +169,7 @@ const prepararJanelaDeRoteiroDeAnamnese = (janelaPai) => {
  * @param {string} janelaPai
  * @return {undefined}
  **/
- const prepararJanelaDeBackup = (janelaPai) => {
+const prepararJanelaDeBackup = (janelaPai) => {
   const opcoes = {
       parent: janelaPai,
       modal: true,
@@ -196,6 +196,12 @@ const prepararJanelaDeRoteiroDeAnamnese = (janelaPai) => {
   janela.show()
   janela.setMenu(new Menu());
 
+  // Remove todos os listeners para evitar chamadas duplicadas
+  ipcMain.removeAllListeners('backup_create_success')
+  ipcMain.removeAllListeners('backup_import_select')
+  ipcMain.removeAllListeners('backup_recovered_successfully')
+
+  // Adicionando listeners
   ipcMain.on('backup_create_success', (evento, dadosRecebidos) => {
     customDialogs.dialogCriarBackup(janela, dadosRecebidos.dados)
   })

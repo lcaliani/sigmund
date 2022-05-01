@@ -7,8 +7,8 @@ const BOTOES = {
 }
 
 /**
- * 
- * @returns {string} Path absoluto do diretório do banco de dados
+ * Retorna o path absoluto do diretório do banco de dados
+ * @returns {string}
  */
 const databasePath = () => {
   return `${process.cwd()}/database`
@@ -41,6 +41,9 @@ async function backup() {
   }
 }
 
+/**
+ * Dispara o sinal para abrir a caixa de diálogo de recuperação do banco
+ */
 const abrirDialogDeRecuperacao = () => {
   ipc.send(
     'backup_import_select',

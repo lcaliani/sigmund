@@ -26,6 +26,12 @@ const dialogCriarBackup = (window, {outputFile, outputPath} = dados) => {
     })
 }
 
+/**
+ * Abre o dialog para a recuperação de backup
+ * @param {BrowserWindow} window 
+ * @param {dados} object 
+ * @returns {string|null}
+ */
 const dialogRecuperarBackup = async (window, {outputPath} = dados) => {
     const options = {
       type: 'info',
