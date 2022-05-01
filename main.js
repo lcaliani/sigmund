@@ -4,10 +4,17 @@ const {
   ipcMain,
   Menu,
   MenuItem,
+  shell,
 } = require('electron')
 
-const path = require('path')
+const customDialogs = require('./components/customDialogs')
 
+const path = require('path')
+const fs = require('fs')
+
+/**
+ * Criar janela principal
+ */
 const criarJanelaPrincipal = () => {
   const janelaPrincipal = new BrowserWindow({
     width: 1280,
@@ -31,13 +38,20 @@ const criarJanelaPrincipal = () => {
   menu.append(new MenuItem({
       label: 'Administração',
       submenu: [
-          {
-              label: 'Perguntas do roteiro de anamnese',
-              acelerator: process.platform === 'darwin' ? 'Alt+Cmd+I' : 'Alt+Shift+A',
-              click: () => {
-                prepararJanelaDeRoteiroDeAnamnese(janelaPrincipal)
-              }
+        {
+            label: 'Perguntas do roteiro de anamnese',
+            acelerator: process.platform === 'darwin' ? 'Alt+Cmd+I' : 'Alt+Shift+A',
+            click: () => {
+              prepararJanelaDeRoteiroDeAnamnese(janelaPrincipal)
+            }
+        },
+        {
+          label: 'Backup e recuperação de dados',
+          acelerator: process.platform === 'darwin' ? 'Alt+Cmd+I' : 'Alt+Shift+A',
+          click: () => {
+            prepararJanelaDeBackup(janelaPrincipal)
           }
+      }
       ]
   }))
 
@@ -149,6 +163,70 @@ const prepararJanelaDeRoteiroDeAnamnese = (janelaPai) => {
     janelaDeRoteiro.show()
     janelaDeRoteiro.setMenu(new Menu());
 }
+
+/**
+ * Abre a janela de backup
+ * @param {string} janelaPai
+ * @return {undefined}
+ **/
+const prepararJanelaDeBackup = (janelaPai) => {
+  const opcoes = {
+      parent: janelaPai,
+      modal: true,
+      center: true,
+      title: 'Backup e Importação de dados',
+      width: 640,
+      height: 360,
+      webPreferences: {
+          nodeIntegration: true,
+          contextIsolation: false,
+      },
+      resizable: false,
+  }
+
+  let janela = new BrowserWindow(opcoes)
+
+  /** @windows @mac only */
+  janela.movable = false
+
+  janela.loadFile('./src/backup/backup.html')
+  if (process.env.APP_ENV == 'dev') {
+    janela.webContents.openDevTools()
+  }
+  janela.show()
+  janela.setMenu(new Menu());
+
+  // Remove todos os listeners para evitar chamadas duplicadas
+  ipcMain.removeAllListeners('backup_create_success')
+  ipcMain.removeAllListeners('backup_import_select')
+  ipcMain.removeAllListeners('backup_recovered_successfully')
+
+  // Adicionando listeners
+  ipcMain.on('backup_create_success', (evento, dadosRecebidos) => {
+    customDialogs.dialogCriarBackup(janela, dadosRecebidos.dados)
+  })
+
+  ipcMain.on('backup_import_select', async (evento, dadosRecebidos) => {
+    const backupPath = await customDialogs.dialogRecuperarBackup(janela, dadosRecebidos.dados)
+    
+    const nothingSelected = backupPath === null
+    if (nothingSelected) {
+      return
+    }
+
+    janela.webContents.send('backup_path_was_selected', backupPath)
+  })
+
+  ipcMain.on('backup_recovered_successfully', (event, data) => {
+    fs.unlink(data.dados.zipFile, (error) => {
+      if (error) {
+        console.warn('Erro ao remover arquivo antigo de backup.', error)
+      }
+      console.log('Arquivo antigo de backup apagado com sucesso.')
+    })
+  })
+}
+
 
 /**
  * "Instala" o event listener que fica ouvindo o evento "abrir_janela_lista_de_sessoes"
