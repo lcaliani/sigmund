@@ -9,7 +9,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "dist:dev": "APP_ENV=dev electron-builder"
   },
   "author": {
     "name": "Leonardo Ruellas",
@@ -33,14 +34,39 @@
     "sqlite": "^4.0.23",
     "sqlite3": "^5.0.2"
   },
-  "config": {},
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "sigmund"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
+  },
   "build": {
     "appId": "sigmund",
     "linux": {
       "target": [
         "deb"
       ]
-    },
-    "extraResources": ["./database/database.db"]
+    }
   }
 }
