@@ -4,13 +4,22 @@ const {
   ipcMain,
   Menu,
   MenuItem,
-  shell,
 } = require('electron')
 
 const customDialogs = require('./components/customDialogs')
 
 const path = require('path')
 const fs = require('fs')
+
+const contextIsolationValue = false
+
+/**
+ * Disponibilizando em variável path para guardar o banco de dados
+ * %APPDATA% no Windows
+ * $XDG_CONFIG_HOME ou ~/.config no Linux
+ * ~/Library/Application Support no macOS
+ */
+process.env.databasePath = app.getPath('userData')
 
 /**
  * Criar janela principal
@@ -22,7 +31,7 @@ const criarJanelaPrincipal = () => {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
-      contextIsolation: false,
+      contextIsolation: contextIsolationValue,
     }
   })
 
@@ -56,6 +65,8 @@ const criarJanelaPrincipal = () => {
   }))
 
   janelaPrincipal.setMenu(menu);
+
+  janelaPrincipal.webContents.openDevTools()
 }
 
 /**
@@ -75,7 +86,7 @@ const prepararJanelaDeProntuarios = (janelaPai) => {
         height: 720,
         webPreferences: {
             nodeIntegration: true,
-            contextIsolation: false,
+            contextIsolation: contextIsolationValue,
         },
         resizable: false,
     }
@@ -86,8 +97,8 @@ const prepararJanelaDeProntuarios = (janelaPai) => {
     janelaProntuarios.movable = false
 
     janelaProntuarios.loadFile('./src/prontuario/prontuario.html')
+    janelaProntuarios.webContents.openDevTools()
     if (process.env.APP_ENV == 'dev') {
-      janelaProntuarios.webContents.openDevTools()
     }
     janelaProntuarios.show()
     janelaProntuarios.setMenu(new Menu());
@@ -112,7 +123,7 @@ const prepararJanelaDeSessoes = (janelaPai) => {
         height: 720,
         webPreferences: {
             nodeIntegration: true,
-            contextIsolation: false,
+            contextIsolation: contextIsolationValue,
         },
         resizable: false,
     }
@@ -123,8 +134,8 @@ const prepararJanelaDeSessoes = (janelaPai) => {
     janelaDeSessoes.movable = false
 
     janelaDeSessoes.loadFile('./src/sessoes/sessoes.html')
+    janelaDeSessoes.webContents.openDevTools()
     if (process.env.APP_ENV == 'dev') {
-      janelaDeSessoes.webContents.openDevTools()
     }
     janelaDeSessoes.show()
     janelaDeSessoes.setMenu(new Menu());
@@ -146,7 +157,7 @@ const prepararJanelaDeRoteiroDeAnamnese = (janelaPai) => {
         height: 720,
         webPreferences: {
             nodeIntegration: true,
-            contextIsolation: false,
+            contextIsolation: contextIsolationValue,
         },
         resizable: false,
     }
@@ -157,8 +168,8 @@ const prepararJanelaDeRoteiroDeAnamnese = (janelaPai) => {
     janelaDeRoteiro.movable = false
 
     janelaDeRoteiro.loadFile('./src/roteiro_de_anamnese/roteiro-de-anamnese.html')
+    janelaDeRoteiro.webContents.openDevTools()
     if (process.env.APP_ENV == 'dev') {
-      janelaDeRoteiro.webContents.openDevTools()
     }
     janelaDeRoteiro.show()
     janelaDeRoteiro.setMenu(new Menu());
@@ -179,7 +190,7 @@ const prepararJanelaDeBackup = (janelaPai) => {
       height: 360,
       webPreferences: {
           nodeIntegration: true,
-          contextIsolation: false,
+          contextIsolation: contextIsolationValue,
       },
       resizable: false,
   }
@@ -190,8 +201,8 @@ const prepararJanelaDeBackup = (janelaPai) => {
   janela.movable = false
 
   janela.loadFile('./src/backup/backup.html')
+  janela.webContents.openDevTools()
   if (process.env.APP_ENV == 'dev') {
-    janela.webContents.openDevTools()
   }
   janela.show()
   janela.setMenu(new Menu());
@@ -245,7 +256,7 @@ const prepararJanelaDeListagemDeSessoes = (janelaPai) => {
         height: 720,
         webPreferences: {
             nodeIntegration: true,
-            contextIsolation: false,
+            contextIsolation: contextIsolationValue,
         },
         resizable: false,
     }
@@ -256,8 +267,8 @@ const prepararJanelaDeListagemDeSessoes = (janelaPai) => {
     janela.movable = false
 
     janela.loadFile('./src/sessoes/listagem/lista-de-sessoes.html')
+    janela.webContents.openDevTools()
     if (process.env.APP_ENV == 'dev') {
-      janela.webContents.openDevTools()
     }
     janela.show()
     janela.setMenu(new Menu());
@@ -285,7 +296,7 @@ const prepararJanelaDeListagemDeSessoes = (janelaPai) => {
         height: 720,
         webPreferences: {
             nodeIntegration: true,
-            contextIsolation: false,
+            contextIsolation: contextIsolationValue,
         },
         resizable: false,
     }
@@ -296,8 +307,8 @@ const prepararJanelaDeListagemDeSessoes = (janelaPai) => {
     janela.movable = false
 
     janela.loadFile('./src/relatorio/relatorio.html')
+    janela.webContents.openDevTools()
     if (process.env.APP_ENV == 'dev') {
-      janela.webContents.openDevTools()
     }
     janela.show()
     janela.setMenu(new Menu());

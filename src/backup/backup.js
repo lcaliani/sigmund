@@ -11,7 +11,7 @@ const BOTOES = {
  * @returns {string}
  */
 const databasePath = () => {
-  return `${process.cwd()}/database`
+  return process.env.databasePath
 }
 
 /**
@@ -88,4 +88,5 @@ const vincularAcoes = () => {
 
 window.addEventListener('DOMContentLoaded', async () => {
   vincularAcoes()
+  document.getElementById('texto-local-backup').innerText = databasePath()
 })
