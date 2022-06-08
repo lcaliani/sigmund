@@ -14,6 +14,14 @@ const fs = require('fs')
 const contextIsolationValue = false
 
 /**
+ * Disponibilizando em variável path para guardar o banco de dados
+ * %APPDATA% no Windows
+ * $XDG_CONFIG_HOME ou ~/.config no Linux
+ * ~/Library/Application Support no macOS
+ */
+process.env.databasePath = app.getPath('userData')
+
+/**
  * Criar janela principal
  */
 const criarJanelaPrincipal = () => {
@@ -57,6 +65,8 @@ const criarJanelaPrincipal = () => {
   }))
 
   janelaPrincipal.setMenu(menu);
+
+  janelaPrincipal.webContents.openDevTools()
 }
 
 /**
