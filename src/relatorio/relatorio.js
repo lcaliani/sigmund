@@ -45,7 +45,8 @@ const MENSAGENS = {
     erro_generico: 'Houve um erro ao realizar a operação. Tente novamente.',
     notas_vazias: 'Nada consta.',
     nenhuma_sessao_escolhida: 'É necessário marcar ao menos um registro para gerar o relatório',
-    nova_busca: 'Preencha os campos e clique em Buscar para realizar uma nova busca.'
+    nova_busca: 'Preencha os campos e clique em Buscar para realizar uma nova busca.',
+    paciente_cadastro_incompleto: 'Há dados incompletos no cadastro do paciente. Verifique o cadastro para prosseguir.',
 }
 
 /**
@@ -299,12 +300,12 @@ const gerarRelatorio = async (event) => {
   let dadosSessoes = await SessaoRepositorio
     .findAllByIds(sessoesEscolhidasIds, 'data_hora_inicio')
 
-  if (dadosPaciente.length > 0 
-      && respostasAnamnese.length > 0
-      && dadosSessoes.length > 0
-  ) {
-    dadosPaciente = dadosPaciente[0]
+  if (dadosPaciente.length == 0 ) {
+    alert(MENSAGENS.paciente_cadastro_incompleto)
+    return
   }
+
+  dadosPaciente = dadosPaciente[0]
 
   dadosSessoes.map((sessao) => {
     sessao.descricao = sessao.descricao === null 

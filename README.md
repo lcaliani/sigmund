@@ -3,8 +3,8 @@ Aplicação desktop de gerenciamento de clínica de pscologia para estudo da fer
 
 ## Pré-requisitos
 
-- [`NodeJS >=14`](https://nodejs.org/en/)
-- [`NPM >= 6`](https://nodejs.org/en/)
+- [`NodeJS >=16`](https://nodejs.org/en/)
+- [`NPM >= 8`](https://nodejs.org/en/)
 
 ## Instalação
 
@@ -14,14 +14,40 @@ npm i
 
 ## Uso
 
-#### Inicializar aplicação
+### Inicializar aplicação
+
+#### No Linux/Mac
 
 ```sh
-npm start
+# Desenvolvimento, web console ativo
+npm run start:dev
+
+# Produção, web console oculto
+npm run start:prod
 ```
 
-#### Criar executável
+#### No Windows
 
 ```sh
-npm run make
+# Desenvolvimento, web console ativo
+npm run start-win:dev
+
+# Produção, web console oculto
+npm run start-win:prod
+```
+
+### Criar executável
+
+Os arquivos executáveis e de instalação podem ser encontrados na pasta `dist`, ao final do processo de build.
+
+#### Para Linux e Windows (.deb e instalável Windows)
+
+```sh
+npm run dist
+```
+
+#### Somente Windows (instalável)
+
+```sh
+npm run dist:win
 ```
