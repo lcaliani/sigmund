@@ -5,11 +5,14 @@
   "main": "main.js",
   "scripts": {
     "start:dev": "APP_ENV=dev electron-forge start",
-    "start": "APP_ENV=prod electron-forge start",
+    "start:production": "APP_ENV=prod electron-forge start",
+    "start-win:dev": "set APP_ENV=dev && electron-forge start",
+    "start-win:production": "set APP_ENV=prod && electron-forge start",
     "test": "echo \"Error: no test specified\" && exit 1",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "dist:win": "electron-builder --windows nsis --x64 --ia32"
   },
   "author": {
     "name": "Leonardo Ruellas",
@@ -35,11 +38,12 @@
   },
   "config": {},
   "build": {
-    "appId": "sigmund",
+    "appId": "Sigmund",
     "linux": {
-      "target": [
-        "deb"
-      ]
+      "target": ["deb"]
+    },
+    "win": {
+      "target": ["nsis"]
     },
     "extraResources": ["./database/database.db"]
   }

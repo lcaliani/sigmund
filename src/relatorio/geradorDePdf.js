@@ -53,6 +53,13 @@ const construirDadosCadastrais = (docDefinition, {
 const construirAnamnese = (docDefinition, respostasAnamnese) => {
   // Anamnese
   docDefinition.content.push({ text: 'Anamnese', style: 'subheader'})
+
+  if (respostasAnamnese.length === 0) {
+    docDefinition.content.push({ text: 'Não há dados de anamnese.', style: 'normal', lineHeight: 1 })
+    docDefinition.content.push({ text: '', pageBreak: 'after'})
+    return
+  }
+
   respostasAnamnese.forEach((anamnese) => {
     docDefinition.content.push({ text: anamnese.pergunta, style: 'strong', lineHeight: 1 })
     docDefinition.content.push({ text: anamnese.resposta, style: 'normal', lineHeight: 1 })
