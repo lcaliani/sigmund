@@ -66,7 +66,9 @@ const criarJanelaPrincipal = () => {
 
   janelaPrincipal.setMenu(menu);
 
-  janelaPrincipal.webContents.openDevTools()
+  if (process.env.APP_ENV == 'dev') {
+    janelaPrincipal.webContents.openDevTools()
+  }
 }
 
 /**
@@ -97,8 +99,9 @@ const prepararJanelaDeProntuarios = (janelaPai) => {
     janelaProntuarios.movable = false
 
     janelaProntuarios.loadFile('./src/prontuario/prontuario.html')
-    janelaProntuarios.webContents.openDevTools()
+    
     if (process.env.APP_ENV == 'dev') {
+      janelaProntuarios.webContents.openDevTools()
     }
     janelaProntuarios.show()
     janelaProntuarios.setMenu(new Menu());
@@ -134,8 +137,9 @@ const prepararJanelaDeSessoes = (janelaPai) => {
     janelaDeSessoes.movable = false
 
     janelaDeSessoes.loadFile('./src/sessoes/sessoes.html')
-    janelaDeSessoes.webContents.openDevTools()
+    
     if (process.env.APP_ENV == 'dev') {
+      janelaDeSessoes.webContents.openDevTools()
     }
     janelaDeSessoes.show()
     janelaDeSessoes.setMenu(new Menu());
@@ -168,8 +172,9 @@ const prepararJanelaDeRoteiroDeAnamnese = (janelaPai) => {
     janelaDeRoteiro.movable = false
 
     janelaDeRoteiro.loadFile('./src/roteiro_de_anamnese/roteiro-de-anamnese.html')
-    janelaDeRoteiro.webContents.openDevTools()
+    
     if (process.env.APP_ENV == 'dev') {
+      janelaDeRoteiro.webContents.openDevTools()
     }
     janelaDeRoteiro.show()
     janelaDeRoteiro.setMenu(new Menu());
@@ -201,8 +206,9 @@ const prepararJanelaDeBackup = (janelaPai) => {
   janela.movable = false
 
   janela.loadFile('./src/backup/backup.html')
-  janela.webContents.openDevTools()
+  
   if (process.env.APP_ENV == 'dev') {
+    janela.webContents.openDevTools()
   }
   janela.show()
   janela.setMenu(new Menu());
@@ -267,8 +273,9 @@ const prepararJanelaDeListagemDeSessoes = (janelaPai) => {
     janela.movable = false
 
     janela.loadFile('./src/sessoes/listagem/lista-de-sessoes.html')
-    janela.webContents.openDevTools()
+    
     if (process.env.APP_ENV == 'dev') {
+      janela.webContents.openDevTools()
     }
     janela.show()
     janela.setMenu(new Menu());
@@ -307,8 +314,9 @@ const prepararJanelaDeListagemDeSessoes = (janelaPai) => {
     janela.movable = false
 
     janela.loadFile('./src/relatorio/relatorio.html')
-    janela.webContents.openDevTools()
+    
     if (process.env.APP_ENV == 'dev') {
+      janela.webContents.openDevTools()
     }
     janela.show()
     janela.setMenu(new Menu());
