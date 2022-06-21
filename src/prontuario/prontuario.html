@@ -25,10 +25,16 @@
             </span>
 
             <div class="row">
-              <div class="twelve columns">
+              <div class="seven columns">
                 <label for="nome">Nome:</label>
                 <input type="text" class="u-full-width" name="nome">
               </div>
+
+              <div class="five columns">
+                <label for="data_nascimento">Data de nascimento:</label>
+                <input type="date" name="data_nascimento">
+              </div>
+
             </div>
     
             <div class="row">
@@ -42,12 +48,7 @@
                 <input type="text" class="u-full-width" name="nome_mae">
               </div>
             </div>
-    
-            <div class="row">
-              <label for="data_nascimento">Data de nascimento:</label>
-              <input type="date" name="data_nascimento">
-            </div>
-    
+
             <div class="row">
               <div class="five columns">
                 <label for="cidade">Cidade:</label>
@@ -66,13 +67,15 @@
                 <input type="checkbox" name="exibir_roteiro_de_anamnese">
               </label>
             </div>
-            
+
+            <div class="row">
+              <button class="button-primary">Salvar</button>
+              <button class="cancel-edit d-none">Cancelar edição</button>
+            </div>
+
             <input type="hidden" name="status" value="1">
 
             <input type="hidden" name="id">
-
-            <button class="button-primary">Salvar dados do paciente</button>
-            <button class="cancel-edit d-none">Cancelar edição</button>
           </form>
     
           <form id="formulario-dados-do-paciente-anamnese" class="d-none">
@@ -83,7 +86,7 @@
             <button disabled 
               class="button-primary"
               title="Salvar respostas (disponível somente após cadastro do paciente)">
-                Salvar respostas
+                Salvar
               </button>
           </form>
         </div>
