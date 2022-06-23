@@ -97,7 +97,7 @@ class Repository {
                 rows.forEach((row) => {
                     result.push(row)
                 })
-                console.log('resultados porra', result)
+
                 resolve(result)
             })
         })
