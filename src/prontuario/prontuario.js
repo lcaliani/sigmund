@@ -15,16 +15,17 @@ const NOME_TABELA_HTML = 'tabela-prontuario'
  */
 const ID_FORMULARIO_HTML = '#formulario-dados-do-paciente'
 
-
 /**
  * Mensagens de feedback
  */
 const MENSAGENS = {
     zero_registros: 'Nenhum registro encontrado',
-    sucesso_gravacao: 'Paciente gravado com sucesso!',
+    sucesso_gravacao: 'Dados registrados com sucesso!',
     sucesso_remocao: 'Paciente inativado com sucesso!',
     erro_generico: 'Houve um erro ao realizar a operação. Tente novamente.',
 }
+
+let actionsAlreadyBinded = false;
 
 /**
  * Carrega na tela os dados cadastrados na tabela
@@ -106,11 +107,15 @@ function vincularAcoes() {
         verSessoes[i].addEventListener('click', abreTelaDeListaDeSessoes)
     }
 
+    if (actionsAlreadyBinded) {
+        return;
+    }
+
     /**
      * Gravação - botão que dispara o evento
      */
     document.querySelector(`#save`).addEventListener('click', () => {
-        document.querySelector(`${ID_FORMULARIO_HTML}`).dispatchEvent(new Event('submit'));
+        document.querySelector(`${ID_FORMULARIO_HTML} input[type="submit"]`).click()
     })
 
     /**
@@ -128,6 +133,8 @@ function vincularAcoes() {
      */
     document.querySelector(`${ID_FORMULARIO_HTML} [name="exibir_roteiro_de_anamnese"]`)
         .addEventListener('change', alternarVisibilidadeAnamnese)
+    
+    actionsAlreadyBinded = true
 }
 
 /**
@@ -203,6 +210,7 @@ async function save(event) {
     
     alert(message)
 
+    // invoca respostas_anamnese.save()
     document.querySelector(`${prontuarioPerguntas.ID_FORMULARIO_ANAMNESE_HTML}`)
         .dispatchEvent(new Event('submit'));
 
