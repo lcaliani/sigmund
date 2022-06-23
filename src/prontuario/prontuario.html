@@ -12,98 +12,102 @@
     <link rel="stylesheet" href="../../css/estilos.css">
   </head>
   <body>
-    <div class="container">
-      <h1>Prontuários e anamnese</h1>
+    <div class="page">
+      <div class="container">
+        <h1>Prontuários e anamnese</h1>
+        
+        <div class="row">
+          <div class="seven columns">
+            <form id="formulario-dados-do-paciente">
+              <h3>Dados do paciente</h3>
+
+              <span class="badge badge-warning text-dark edit-status d-none">
+                Editando dados de: <strong id="paciente-atual-sendo-editado"></strong>
+              </span>
+
+              <div class="row">
+                <div class="seven columns">
+                  <label for="nome">Nome:</label>
+                  <input type="text" class="u-full-width" name="nome" required>
+                </div>
+
+                <div class="five columns">
+                  <label for="data_nascimento">Data de nascimento:</label>
+                  <input type="date" name="data_nascimento" required>
+                </div>
+
+              </div>
       
-      <div class="row">
-        <div class="seven columns">
-          <form id="formulario-dados-do-paciente">
-            <h3>Dados do paciente</h3>
-
-            <span class="badge badge-warning text-dark edit-status d-none">
-              Editando dados de: <strong id="paciente-atual-sendo-editado"></strong>
-            </span>
-
-            <div class="row">
-              <div class="seven columns">
-                <label for="nome">Nome:</label>
-                <input type="text" class="u-full-width" name="nome">
+              <div class="row">
+                <div class="six columns">
+                  <label for="nome_pai">Pai:</label>
+                  <input type="text" class="u-full-width" name="nome_pai">
+                </div>
+                
+                <div class="six columns">
+                  <label for="nome_mae">Mãe:</label>
+                  <input type="text" class="u-full-width" name="nome_mae">
+                </div>
               </div>
 
-              <div class="five columns">
-                <label for="data_nascimento">Data de nascimento:</label>
-                <input type="date" name="data_nascimento">
-              </div>
-
-            </div>
-    
-            <div class="row">
-              <div class="six columns">
-                <label for="nome_pai">Pai:</label>
-                <input type="text" class="u-full-width" name="nome_pai">
+              <div class="row">
+                <div class="five columns">
+                  <label for="cidade">Cidade:</label>
+                  <input type="text" class="u-full-width" name="cidade">
+                </div>
+                
+                <div class="seven columns">
+                  <label for="endereco">Endereço:</label>
+                  <input type="text" class="u-full-width" name="endereco">
+                </div>
               </div>
               
-              <div class="six columns">
-                <label for="nome_mae">Mãe:</label>
-                <input type="text" class="u-full-width" name="nome_mae">
+              <div class="row">
+                <label for="maioridade-paciente">
+                  <span class="label-body">Exibir roteiro de anamnese?</span>
+                  <input type="checkbox" name="exibir_roteiro_de_anamnese">
+                </label>
               </div>
-            </div>
 
-            <div class="row">
-              <div class="five columns">
-                <label for="cidade">Cidade:</label>
-                <input type="text" class="u-full-width" name="cidade">
+              <div class="row">
               </div>
-              
-              <div class="seven columns">
-                <label for="endereco">Endereço:</label>
-                <input type="text" class="u-full-width" name="endereco">
+
+              <input type="hidden" name="status" value="1">
+
+              <input type="hidden" name="id">
+            </form>
+      
+            <form id="formulario-dados-do-paciente-anamnese" class="d-none">
+              <h3>Roteiro de anamnese</h3>
+              <div id="formulario-dados-do-paciente-anamnese-perguntas" class="row">
               </div>
-            </div>
-            
-            <div class="row">
-              <label for="maioridade-paciente">
-                <span class="label-body">Exibir roteiro de anamnese?</span>
-                <input type="checkbox" name="exibir_roteiro_de_anamnese">
-              </label>
-            </div>
 
-            <div class="row">
-              <button class="button-primary">Salvar</button>
-              <button class="cancel-edit d-none">Cancelar edição</button>
-            </div>
-
-            <input type="hidden" name="status" value="1">
-
-            <input type="hidden" name="id">
-          </form>
-    
-          <form id="formulario-dados-do-paciente-anamnese" class="d-none">
-            <h3>Roteiro de anamnese</h3>
-            <div id="formulario-dados-do-paciente-anamnese-perguntas" class="row">
-            </div>
-
-            <button disabled 
-              class="button-primary"
-              title="Salvar respostas (disponível somente após cadastro do paciente)">
-                Salvar
-              </button>
-          </form>
+              <button disabled
+                class="button-primary hidden"
+                title="Salvar respostas (disponível somente após cadastro do paciente)">
+                  Salvar
+                </button>
+            </form>
+          </div>
+          <div class="five columns">
+            <table class="u-full-width" name="tabela-prontuario">
+              <thead>
+                <tr>
+                  <th>Paciente</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="conteudo-tabela-prontuario">
+              </tbody>
+            </table>
+          </div>
         </div>
-        <div class="five columns">
-          <table class="u-full-width" name="tabela-prontuario">
-            <thead>
-              <tr>
-                <th>Paciente</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody id="conteudo-tabela-prontuario">
-            </tbody>
-          </table>
-        </div>
+
       </div>
-
+      <div class="footer">
+        <button class="cancel-edit d-none">Cancelar edição</button>
+        <button id="save" class="button-primary">Salvar</button>
+      </div>
     </div>
   
     <script type="text/javascript" src="./prontuario.js"></script>

@@ -49,6 +49,10 @@ class ProntuarioRepositorio extends Repositorio {
         })
     }
 
+    /**
+     * @param {object} valores 
+     * @returns {Promisse<bool>}
+     */
     async update(valores = null) {
         if (!valores || (typeof valores !== 'object')) {
             return false
@@ -76,7 +80,7 @@ class ProntuarioRepositorio extends Repositorio {
     /**
      * Insere um registro no banco
      * @param {object} values Objeto chave/valor com o nome dos campos e seus valores
-     * @return {Promise} true para sucesso, false para falha
+     * @return {Promise<bool|bool>} true para sucesso, false para falha
      */
     async insert(valores = null) {
         if (!valores || (typeof valores !== 'object')) {
@@ -88,10 +92,15 @@ class ProntuarioRepositorio extends Repositorio {
         const parametros = [nome, nome_pai, nome_mae, data_nascimento, cidade, endereco, status]
 
         return new Promise((resolve, reject) => {
-            this.con.run(instrucao, parametros, (err) => {
+            /**
+             * Utilizando `function` para englobar o contexto do this e pegar o
+             * lastID
+             * @see https://github.com/TryGhost/node-sqlite3/wiki/API#runsql--param---callback
+             */
+            this.con.run(instrucao, parametros, function (err) {
                 if (!err) {
-                    console.info('Inserido com sucesso')
-                    return resolve(true)
+                    console.info('Inserido com sucesso', )
+                    return resolve(this.lastID)
                 }
                 console.warn(err) 
                 return reject(false)

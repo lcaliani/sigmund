@@ -107,14 +107,21 @@ function vincularAcoes() {
     }
 
     /**
-     * Gravação 
+     * Gravação - botão que dispara o evento
+     */
+    document.querySelector(`#save`).addEventListener('click', () => {
+        document.querySelector(`${ID_FORMULARIO_HTML}`).dispatchEvent(new Event('submit'));
+    })
+
+    /**
+     * Gravação - evento
      */
     document.querySelector(`${ID_FORMULARIO_HTML}`).addEventListener('submit', save)
 
     /**
      * Limpeza dos inputs ao cancelar edição
      */
-    document.querySelector(`${ID_FORMULARIO_HTML} .cancel-edit`).addEventListener('click', limparCampos)
+    document.querySelector(`.footer .cancel-edit`).addEventListener('click', limparCampos)
 
     /**
      * Visibilidade dos inputs de roteiro de anamnese
@@ -149,7 +156,7 @@ function preencherCampos(valoresDoBanco = {}, linhaDaTabela) {
 
     // Botões padrão
     document.querySelector(`${ID_FORMULARIO_HTML} .edit-status`).classList.remove('d-none')
-    document.querySelector(`${ID_FORMULARIO_HTML} .cancel-edit`).classList.remove('d-none')
+    document.querySelector(`.footer .cancel-edit`).classList.remove('d-none')
 
     // Badge de edição
     document.querySelector('#paciente-atual-sendo-editado').innerHTML = nome
@@ -182,7 +189,22 @@ async function save(event) {
         return
     }
 
+    /**
+     * No update, o id vem do formulário do paciente
+     * No insert, o id vem do resultado da query de insert
+     */
+    const patientId = isUpdating ? dadosDoFormulario.id : wasSaved
+
+    // Setar no formulário de perguntas o id do paciente manipulado/criado
+    document.querySelector('#formulario-dados-do-paciente-anamnese').dataset.id_paciente = patientId
+    document.querySelectorAll(`#formulario-dados-do-paciente-anamnese textarea`).forEach((textarea) => {
+        textarea.dataset.id_paciente = patientId
+    })
+    
     alert(message)
+
+    document.querySelector(`${prontuarioPerguntas.ID_FORMULARIO_ANAMNESE_HTML}`)
+        .dispatchEvent(new Event('submit'));
 
     inicializar()
     limparCampos()
@@ -261,7 +283,7 @@ function limparCampos(event) {
     document.querySelector(`${ID_FORMULARIO_HTML} input[name="status"]`).value = '1' // default 1
 
     // Botões padrão
-    document.querySelector(`${ID_FORMULARIO_HTML} .cancel-edit`).classList.add('d-none')
+    document.querySelector(`.footer .cancel-edit`).classList.add('d-none')
     document.querySelector(`${ID_FORMULARIO_HTML} .edit-status`).classList.add('d-none')
 
     // Seleção na tabela
