@@ -24,13 +24,15 @@ module.exports = () => {
 }
 
 /**
- * 
+ * Ao criar o build, é gerado um arquivo app.asar. O diretório em que ele se
+ * encontra é somente escrita, por isso, é necessário criar uma cópia do
+ * banco dentro de `process.env.databasePath`, que é o path correto para isso.
  * @returns {string} Caminho do arquivo de banco de dados
  */
 const prepareDatabase = () => {
     const databaseFile = path
-    .join(__dirname, './database.db')
-    .replace('/app.asar', '');
+        .join(__dirname, './database.db')
+        .replace('/app.asar', '');
 
     const buildDatabaseFile = path
         .join(process.env.databasePath, './database.db')

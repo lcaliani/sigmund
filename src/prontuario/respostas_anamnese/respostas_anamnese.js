@@ -23,6 +23,8 @@ const MENSAGENS = {
     erro_generico: 'Houve um erro ao realizar a operação. Tente novamente.',
 }
 
+let actionsAlreadyBinded = false;
+
 /**
  * Carregamento inicial do formulário de perguntas
  */
@@ -119,13 +121,15 @@ function limparCampos(event) {
         textArea.dataset.id_paciente = ''
         textArea.value = ''
     })
-    document.querySelector(`${ID_FORMULARIO_ANAMNESE_HTML} button`).setAttribute('disabled', 'true')
 }
 
 /**
  * Vincula o envio do formulario ao método save, para persistir os dados
  */
 function vincularAcoes() {
+    if (actionsAlreadyBinded) {
+        return;
+    }
     document.querySelector(`${ID_FORMULARIO_ANAMNESE_HTML}`).addEventListener('submit', save)
 }
 /**
@@ -143,11 +147,11 @@ async function save(event) {
     
     if (!wasSaved) {
         message = MENSAGENS.erro_generico
-        alert(message)
+        console.warn(message)
         return
     }
 
-    alert(message)
+    console.log(message)
 
     inicializar()
     limparCampos()
