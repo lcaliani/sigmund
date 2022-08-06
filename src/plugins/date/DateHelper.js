@@ -18,8 +18,11 @@ class DateHelper {
     get date() {
       let month = this.fullDate.getMonth() + 1
       month = this.addLeadingZero(month)
-      
-      return `${this.fullDate.getFullYear()}-${month}-${this.fullDate.getDate()}`
+
+      let day = this.fullDate.getDate()
+      day = this.addLeadingZero(day)
+
+      return `${this.fullDate.getFullYear()}-${month}-${day}`
     }
 
     /** @returns {string} Data no formato `dd-MM-yyyy` | ex: 06-12-2022 */
