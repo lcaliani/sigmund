@@ -1,10 +1,12 @@
 # Sigmund
-Aplicação desktop de gerenciamento de clínica de pscologia para estudo da ferramenta Electron
+Aplicação desktop de gerenciamento de clínica de psicologia para estudo da ferramenta Electron
 
 ## Pré-requisitos
 
 - [`NodeJS >=16`](https://nodejs.org/en/)
 - [`NPM >= 8`](https://nodejs.org/en/)
+
+OBS: No Windows, também necessário que as ferramentas de build de módulos nativos do node seja instaladas. O instalador do node no windows já vem com a opção de instalar essas ferramentas logo após a instalação do próprio node.
 
 ## Instalação
 

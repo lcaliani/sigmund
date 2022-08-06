@@ -238,6 +238,7 @@ async function deleteItem(removeButtonEvent) {
     alert(message)
 
     inicializar()
+    limparCampos()
 }
 
 /**
