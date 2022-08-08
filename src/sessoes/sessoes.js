@@ -105,11 +105,16 @@ const inicializarCalendario = () => {
      */
     dateClick: (info) => {
       const dataHora = new DateHelper(info.dateStr)
+      const hora_fim = new DateHelper(
+        new Date(dataHora.fullDate.getTime() + (50 * 60000)) // 50 minutos p/ frente
+      )
       const campos = {
         data_inicio: dataHora.date,
         hora_inicio: dataHora.time,
         data_fim: dataHora.date,
+        hora_fim: hora_fim.time
       }
+
       modalNew.preencherCampos(campos, false)
       modalNew.openModal()
     }
