@@ -182,7 +182,7 @@ const buscar = async (event) => {
     dataHoraFim = `${document.querySelector(`${FORMULARIO.DATA_HORA_FIM}`).value} 23:59`
   }
 
-  const hasInvalidDates = new DateHelper(dataHoraFim).fullDate.getTime() < new DateHelper(dataHoraInicio).fullDate.getTime()
+  const hasInvalidDates = new Date(dataHoraFim).getTime() < new Date(dataHoraInicio).getTime()
   if (hasInvalidDates) {
     alert('A data inicial deve ser de antes da data final. Por favor, revise as datas informadas.')
     return
