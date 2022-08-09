@@ -113,6 +113,14 @@ const save = async (event) => {
   event.preventDefault()
   const dadosDoFormulario = recuperarDadosDoFormulario()
 
+  const hasInvalidDates =
+    new Date(dadosDoFormulario.data_hora_fim).getTime() < new Date(dadosDoFormulario.data_hora_inicio).getTime()
+  if (hasInvalidDates) {
+    alert('A data e hora inicial devem ser de antes da data e hora finais. Por favor, revise as datas e horas informadas.')
+    return
+  }
+
+
   const isUpdating = dadosDoFormulario.id !== null
   const wasSaved = isUpdating 
       ? await repositorio.update(dadosDoFormulario)
